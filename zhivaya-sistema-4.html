@@ -1,0 +1,327 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Часть 4. Сеть очагов адекватности — Искра жизни</title>
+  <style>
+    :root {
+      --ember:      #C8521A;
+      --ember-light:#E07040;
+      --ember-pale: #FAE8DC;
+      --forest:     #2D4A2D;
+      --forest-mid: #3D6B3D;
+      --cream:      #FDF8F3;
+      --stone:      #6B6457;
+      --charcoal:   #2A2520;
+      --ink:        #16120E;
+      --sky:        #2E5C8A;
+      --sky-pale:   #E7F0F8;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Georgia', serif; background: var(--cream); color: var(--charcoal); line-height: 1.7; }
+
+    .site-header { background: var(--ink); padding: 1rem 2rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .site-header a { color: rgba(255,255,255,0.55); font-family:'Arial',sans-serif; font-size:0.85rem; text-decoration:none; }
+    .site-header a:hover { color: #fff; }
+    .site-header .sep { color: rgba(255,255,255,0.2); }
+    .site-header .current { color: rgba(255,255,255,0.4); font-family:'Arial',sans-serif; font-size:0.85rem; }
+
+    .article-hero { background: var(--ink); padding: 4.5rem 2rem 3.5rem; text-align: center; }
+    .hero-eyebrow { font-family: 'Arial', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(255,255,255,0.35); margin-bottom: 1.2rem; display: block; }
+    .article-hero h1 { font-size: clamp(1.9rem, 4.6vw, 3rem); color: #fff; line-height: 1.28; margin-bottom: 1.2rem; max-width: 760px; margin-left: auto; margin-right: auto; letter-spacing: -0.01em; }
+    .article-hero h1 em { color: var(--ember-light); font-style: normal; }
+    .article-meta { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; font-family: 'Arial', sans-serif; font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+    .article-meta .dot { color: rgba(255,255,255,0.2); }
+
+    .article-wrap { max-width: 700px; margin: 0 auto; padding: 3.2rem 1.5rem 2rem; }
+    .lede { font-size: 1.12rem; color: var(--charcoal); margin-bottom: 1.5rem; }
+    .article-wrap p { font-size: 1.05rem; color: var(--charcoal); margin-bottom: 1.4rem; }
+    .article-wrap p strong { color: var(--ember); }
+    h2.section-h { font-size: 1.4rem; color: var(--forest-mid); margin: 2.6rem 0 1.2rem; line-height: 1.35; }
+
+    blockquote.pull { margin: 2rem 0; border-left: 3px solid var(--ember); padding: 0.4rem 0 0.4rem 1.5rem; font-size: 1.25rem; font-style: italic; color: var(--forest); line-height: 1.5; }
+
+    .note-box { background: var(--ember-pale); border: 1.5px solid rgba(200,82,26,0.25); border-radius: 10px; padding: 1.6rem 1.8rem; margin: 2.2rem 0; }
+    .note-box .nb-label { font-family: 'Arial', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ember); margin-bottom: 0.7rem; display: block; }
+    .note-box p { margin-bottom: 0; font-size: 0.98rem; color: var(--charcoal); }
+    .note-box p + p { margin-top: 0.8rem; }
+
+    /* ── MAP LEGEND ── */
+    .legend-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; margin: 2rem 0; }
+    .legend-card { border-radius: 10px; padding: 1.4rem 1.5rem; }
+    .legend-card.white { background:#fff; border:1.5px solid rgba(107,100,87,0.25); }
+    .legend-card.blue { background: var(--sky-pale); border:1.5px solid rgba(46,92,138,0.25); }
+    .legend-dot { width:0.9rem; height:0.9rem; border-radius:50%; display:inline-block; margin-right:0.5rem; vertical-align:middle; }
+    .legend-dot.white-dot { background:#fff; border:2px solid var(--stone); }
+    .legend-dot.blue-dot { background: var(--sky); }
+    .legend-card h4 { font-size:0.98rem; margin-bottom:0.5rem; display:flex; align-items:center; }
+    .legend-card p { font-family:'Arial',sans-serif; font-size:0.85rem; color:var(--stone); margin-bottom:0; }
+
+    /* ── NUMBERED CARDS ── */
+    .num-card { background: #fff; border: 1px solid rgba(45,74,45,0.15); border-radius: 10px; padding: 1.5rem 1.6rem; margin-bottom: 1rem; display: flex; gap: 1.1rem; align-items: flex-start; }
+    .num-badge { flex-shrink: 0; width: 2.3rem; height: 2.3rem; border-radius: 50%; background: var(--forest); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Arial', sans-serif; font-weight: bold; font-size: 0.95rem; }
+    .num-body h4 { font-size: 1.02rem; color: var(--charcoal); margin-bottom: 0.4rem; }
+    .num-body p { font-size: 0.96rem; margin-bottom: 0; color: var(--stone); }
+
+    /* ── URGENT CTA ── */
+    .urgent-box { background: var(--ember); color:#fff; border-radius:12px; padding:2rem; margin:2.2rem 0; }
+    .urgent-box .ub-label { font-family:'Arial',sans-serif; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:rgba(255,255,255,0.7); margin-bottom:0.7rem; display:block; }
+    .urgent-box h3 { color:#fff; font-size:1.15rem; margin-bottom:0.7rem; }
+    .urgent-box p { color:rgba(255,255,255,0.9); font-family:'Arial',sans-serif; font-size:0.92rem; margin-bottom:0.6rem; }
+    .urgent-box p:last-child { margin-bottom:0; }
+
+    /* ── MASTER CARDS ── */
+    .master-grid { display:grid; grid-template-columns:1fr 1fr; gap:1.2rem; margin:2rem 0; }
+    .master-card { background:#fff; border:1.5px solid rgba(46,92,138,0.2); border-radius:10px; padding:1.5rem; }
+    .master-card .mc-icon { font-size:1.7rem; margin-bottom:0.6rem; }
+    .master-card h4 { font-size:1rem; color:var(--sky); margin-bottom:0.3rem; }
+    .master-card .mc-role { font-family:'Arial',sans-serif; font-size:0.78rem; color:var(--stone); margin-bottom:0.6rem; display:block; }
+    .master-card p { font-family:'Arial',sans-serif; font-size:0.87rem; color:var(--stone); margin-bottom:0; }
+
+    /* ── SERIES NAV ── */
+    .series-nav { max-width: 700px; margin: 1rem auto 0; padding: 1.5rem 1.5rem 0; border-top: 1px solid rgba(200,82,26,0.15); }
+    .series-nav .series-label { font-family: 'Arial', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--stone); margin-bottom: 0.8rem; display: block; }
+    .series-row { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .series-item { font-family: 'Arial', sans-serif; font-size: 0.9rem; color: var(--stone); padding: 0.7rem 0; }
+    .series-item a { color: var(--ember); text-decoration: none; }
+    .series-item a:hover { text-decoration: underline; }
+    .series-item.next-disabled { opacity: 0.5; }
+
+    .join-nudge { max-width: 700px; margin: 2.5rem auto 4rem; padding: 0 1.5rem; }
+    .join-nudge-inner { background: var(--ink); border-radius: 12px; padding: 2rem; text-align: center; color: #fff; }
+    .join-nudge-inner p { font-family: 'Arial', sans-serif; font-size: 0.92rem; color: rgba(255,255,255,0.6); margin-bottom: 1.1rem; }
+    .btn-join { display: inline-block; background: var(--ember); color: #fff; padding: 0.8rem 2rem; border-radius: 7px; text-decoration: none; font-family: 'Arial', sans-serif; font-weight: bold; font-size: 0.95rem; transition: background 0.2s; }
+    .btn-join:hover { background: var(--ember-light); }
+
+    footer { background: var(--charcoal); color: rgba(255,255,255,0.55); padding: 3rem 2rem; text-align: center; }
+    footer .footer-logo { font-size: 1.3rem; color: var(--ember-light); margin-bottom: 0.5rem; display: block; }
+    footer p { font-family: 'Arial', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.45); margin-bottom: 0.4rem; }
+    footer a { color: var(--ember-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+    .footer-links a { font-family: 'Arial', sans-serif; font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+
+    @media (max-width: 560px) {
+      .article-hero { padding: 3.5rem 1.2rem 2.5rem; }
+      .series-row { flex-direction: column; gap: 0.3rem; }
+      .num-card { flex-direction: column; }
+      .legend-grid, .master-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html">🔥 Искра жизни</a>
+  <span class="sep">/</span>
+  <a href="blog.html">Блог</a>
+  <span class="sep">/</span>
+  <span class="current">Сеть очагов адекватности</span>
+</header>
+
+<div class="article-hero">
+  <span class="hero-eyebrow">Сеть родительских клубов</span>
+  <h1>Часть 4. <em>Сеть очагов адекватности</em></h1>
+  <div class="article-meta">
+    <span>9 мая 2025</span>
+    <span class="dot">·</span>
+    <span>03:30</span>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <p class="lede">
+    Точка отсчёта — модель семечки: человека, ребёнка, который рождается в мир. Эта семечка уже
+    конкретная, но никто не знает, ромашка это или баобаб — ни родители, ни ребёнок. Семечка
+    укомплектована определённой психофизиологической конфигурацией, чтобы реализовывать именно свою
+    природу. А мы, как родители, наблюдаем и создаём условия для проявления этой конфигурации, узора
+    — где-то теплицу создать, а где-то давление и напряжение.
+  </p>
+
+  <p>
+    Это не что-то статичное, простое, линейное — это целый спектр, объём, многогранность, требующая
+    раскрытия и реализации. Поэтому среда должна быть разнообразной. Такое разнообразие питательных
+    веществ невозможно организовать внутри семьи или сообщества. И мы сразу мыслим сетью. Сеть очагов
+    адекватности.
+  </p>
+
+  <h2 class="section-h">Карта России: белые и синие точки</h2>
+
+  <div class="legend-grid">
+    <div class="legend-card white">
+      <h4><span class="legend-dot white-dot"></span>Белые точки</h4>
+      <p>Сообщества родителей, заинтересованных в самостоятельности детей — потенциальные очаги адекватности в регионе, городе, деревне. Они что-то ищут и пробуют для своих детей, но не знают, что именно.</p>
+    </div>
+    <div class="legend-card blue">
+      <h4><span class="legend-dot blue-dot"></span>Синие точки</h4>
+      <p>Мастера, обладающие знанием и опытом в сфере, необходимой для жизни любого человека: природные элементы, строительство дома, здоровье, экономика, юриспруденция, технологии, безопасность.</p>
+    </div>
+  </div>
+
+  <blockquote class="pull">
+    Мы со всей России из белых точек слетаемся в назначенное время к Мастеру — созидаем его среду
+    жизни, учимся — разлетаемся, приземляем на своих локациях и расширяем сообщество. И так снова, к
+    другому Мастеру.
+  </blockquote>
+
+  <p>
+    Мастера — это люди с искрой внутри. Это главный критерий. Потому что передаётся только искра, а
+    не знания. Мастера делают то, что не могут не делать, то, чем они горят, реализуя свою семечку.
+  </p>
+
+  <h2 class="section-h">Тройная роль природных экосистем</h2>
+
+  <p>
+    Природа — первичный источник ресурса. Людям в городе это сложно понять. Если спросить многих
+    родителей с ограниченным финансовым ресурсом: как вы планируете жить в нетрудоспособном возрасте?
+    На какой ресурс? Вы верите в пенсию? В чём накапливать при высокой инфляции? Где будут жить и
+    зарабатывать на жильё ваши дети, чтобы растить собственных детей?
+  </p>
+
+  <p>
+    Природная экосистема — это первичный источник ресурса, потому что только в биотопе возможно, что
+    ты отрезаешь ветку, а вырастают пять. С точки зрения экономики это немыслимо — чудо, фантастика. В
+    проекте природные экосистемы играют как минимум тройную роль:
+  </p>
+
+  <div class="num-card">
+    <div class="num-badge">1</div>
+    <div class="num-body">
+      <h4>Источник ресурса</h4>
+      <p>Критически важен носитель знания, как с природой управляться. Такой человек есть — Ринальдо Маллямов в Ульяновской области.</p>
+    </div>
+  </div>
+
+  <div class="num-card">
+    <div class="num-badge">2</div>
+    <div class="num-body">
+      <h4>Фундамент для детей до 10 лет</h4>
+      <p>Через природную экосистему в теле прошивается Космос, с которым рождается ребёнок. Он должен приземлиться в каждую клеточку, быть прожит на молекулярном уровне до 10 лет — это фундамент для становления всех абстрактных понятий, наук и прочего.</p>
+    </div>
+  </div>
+
+  <div class="num-card">
+    <div class="num-badge">3</div>
+    <div class="num-body">
+      <h4>Прошивка экосистемного мышления для взрослых</h4>
+      <p>Эта модель везде присутствует — в семье, коллективах, сообществах, городах. Можно городить огород через мёртвые управленческие модели, а можно — через живые системы и их законы, прожив сначала экосистемность на себе.</p>
+    </div>
+  </div>
+
+  <div class="urgent-box">
+    <span class="ub-label">Призыв</span>
+    <h3>Не терять сезон</h3>
+    <p>Уже в этом сезоне, в ближайшие две недели мая, — поехать к Ринальдо в Ульяновскую область учиться и знакомиться друг с другом.</p>
+    <p><strong>Первый акт</strong> — установка юрты. Нужны мужчины с инженерным мышлением, на машине, с инструментом, руками.</p>
+    <p><strong>Второй акт</strong>, сразу же после юрты, — закладка лесосада. Лесосад закладывается один раз на территории и становится долгоиграющим источником ресурса на несколько поколений вперёд, который будет сам себя растить при правильном обращении.</p>
+  </div>
+
+  <h2 class="section-h">Мастера сети</h2>
+
+  <div class="master-grid">
+    <div class="master-card">
+      <div class="mc-icon">🌾</div>
+      <h4>Ринальдо Маллямов</h4>
+      <span class="mc-role">Ульяновская область</span>
+      <p>Пермакультурный подход, управление природными системами в открытом грунте. Щедро делится знанием.</p>
+    </div>
+    <div class="master-card">
+      <div class="mc-icon">🏕</div>
+      <h4>Константин Николаевич («Леший»)</h4>
+      <span class="mc-role">Можайский район</span>
+      <p>40 лет посвятил тому, как выращивать социальные живые системы, как людям объединяться разностями и уживаться друг с другом в горе и радости.</p>
+    </div>
+    <div class="master-card">
+      <div class="mc-icon">🧭</div>
+      <h4>Наталья Манежева</h4>
+      <span class="mc-role">Тверская область</span>
+      <p>30 лет помогает людям обнаружить собственные смыслы, обрести контакт с внутренней искрой и призванием — от executive search до тонкой индивидуальной терапии.</p>
+    </div>
+    <div class="master-card">
+      <div class="mc-icon">🥭</div>
+      <h4>Элина</h4>
+      <span class="mc-role">~100 км от Казани</span>
+      <p>Выращивает манго, папайю, маракуйю. Уникальный опыт плодоносящих экосистем в закрытом грунте, в теплицах и оранжереях при -30°.</p>
+    </div>
+  </div>
+
+  <p>
+    Компетенции Элины критически важны для северных регионов — многие не рассматривают миграцию туда
+    из-за климата, а это более безопасные и чистые территории. С опытом Ринальдо и Элины там можно
+    открывать другие возможности. Центр Сибири и восток Урала — стратегическое направление.
+  </p>
+
+  <h2 class="section-h">Зачем эти поездки на самом деле</h2>
+
+  <p>
+    Все слёты, погружения, обучения со всей России — это повод для встреч, симпатии, дружбы между
+    очень разными взрослыми и детьми. Только так, в реальном деле, мы можем встретиться сердцами, без
+    масок, узнавать друг друга, растить ответственность и доверие, учиться объединяться разностями не
+    на словах, а на деле. Здесь два необходимых элемента проекта:
+  </p>
+
+  <div class="num-card">
+    <div class="num-badge">1</div>
+    <div class="num-body">
+      <h4>Созревание сообщества единомышленников</h4>
+      <p>Постепенная группировка и объединение людей по ценностям и интересам, создание белых точек или присоединение к уже действующим. Так ручейки стекаются в реку новой социальности.</p>
+    </div>
+  </div>
+
+  <div class="num-card">
+    <div class="num-badge">2</div>
+    <div class="num-body">
+      <h4>Сеть доверия для перекрёстного наставничества</h4>
+      <p>Неформальное образование детей друг друга — возможно только при взаимной симпатии и доверии. Относитесь к поездкам не как к образованию, а как к поводам для дружбы, наращиванию неформальной грибницы тёплых связей.</p>
+    </div>
+  </div>
+
+  <div class="num-card">
+    <div class="num-badge">3</div>
+    <div class="num-body">
+      <h4>Будущие бизнесы и кооперативы</h4>
+      <p>Следствие творческих и образовательных экспериментов, узнавания друг друга в деле, доверия и дружбы — выход в новый образ жизни социума через движущую силу родителей: самостоятельность детей во взрослой жизни.</p>
+    </div>
+  </div>
+
+  <blockquote class="pull">
+    Первичен сейчас — график поездок и погружений к мастерам в этом сезоне, чтобы не терять год.
+    Редкий ребёнок пойдёт на занятия к незнакомому человеку, если только родитель не заставит. Поэтому
+    первичен офлайн-контакт в интересном деле — а потом уже гибридный формат онлайн-офлайн.
+  </blockquote>
+
+</div>
+
+<div class="series-nav">
+  <span class="series-label">Серия «Сеть родительских клубов»</span>
+  <div class="series-row">
+    <span class="series-item"><a href="zhivaya-sistema-3.html">← Часть 3. Целевая аудитория</a></span>
+    <span class="series-item"><a href="zhivaya-sistema-5.html">Часть 5. Кровеносная система проекта →</a></span>
+  </div>
+</div>
+
+<div class="join-nudge">
+  <div class="join-nudge-inner">
+    <p>Если этот взгляд на выращивание живой системы отзывается — присоединяйтесь к сообществу родителей, которые растят самостоятельность детей вместе.</p>
+    <a href="index.html#join" class="btn-join">Подать заявку на участие →</a>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-logo">🔥 Искра жизни</span>
+  <p>Родительская инициатива семейного экспериментального творчества</p>
+  <p>По вопросам участия: <a href="mailto:info@iskrazhizni.ru">info@iskrazhizni.ru</a></p>
+  <div class="footer-links">
+    <a href="index.html#about">О проекте</a>
+    <a href="index.html#principles">Принципы</a>
+    <a href="index.html#quiz">Опросники</a>
+    <a href="index.html#join">Присоединиться</a>
+  </div>
+  <p style="margin-top:2rem; font-size:0.75rem; opacity:0.3;">© 2026 Искра жизни</p>
+</footer>
+
+</body>
+</html>

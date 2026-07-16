@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Часть 8. Организационно-правовая форма — Искра жизни</title>
+  <style>
+    :root {
+      --ember:      #C8521A;
+      --ember-light:#E07040;
+      --ember-pale: #FAE8DC;
+      --forest:     #2D4A2D;
+      --forest-mid: #3D6B3D;
+      --cream:      #FDF8F3;
+      --stone:      #6B6457;
+      --charcoal:   #2A2520;
+      --ink:        #16120E;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Georgia', serif; background: var(--cream); color: var(--charcoal); line-height: 1.7; }
+
+    .site-header { background: var(--ink); padding: 1rem 2rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .site-header a { color: rgba(255,255,255,0.55); font-family:'Arial',sans-serif; font-size:0.85rem; text-decoration:none; }
+    .site-header a:hover { color: #fff; }
+    .site-header .sep { color: rgba(255,255,255,0.2); }
+    .site-header .current { color: rgba(255,255,255,0.4); font-family:'Arial',sans-serif; font-size:0.85rem; }
+
+    .article-hero { background: var(--ink); padding: 4.5rem 2rem 3.5rem; text-align: center; }
+    .hero-eyebrow { font-family: 'Arial', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(255,255,255,0.35); margin-bottom: 1.2rem; display: block; }
+    .article-hero h1 { font-size: clamp(1.8rem, 4.4vw, 2.85rem); color: #fff; line-height: 1.28; margin-bottom: 1.2rem; max-width: 760px; margin-left: auto; margin-right: auto; letter-spacing: -0.01em; }
+    .article-hero h1 em { color: var(--ember-light); font-style: normal; }
+    .article-meta { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; font-family: 'Arial', sans-serif; font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+    .article-meta .dot { color: rgba(255,255,255,0.2); }
+
+    .article-wrap { max-width: 700px; margin: 0 auto; padding: 3.2rem 1.5rem 2rem; }
+    .lede { font-size: 1.12rem; color: var(--charcoal); margin-bottom: 1.5rem; }
+    .article-wrap p { font-size: 1.05rem; color: var(--charcoal); margin-bottom: 1.4rem; }
+    .article-wrap p strong { color: var(--ember); }
+    h2.section-h { font-size: 1.4rem; color: var(--forest-mid); margin: 2.6rem 0 1.2rem; line-height: 1.35; }
+
+    .summary-card { background: #fff; border: 1.5px solid rgba(45,74,45,0.18); border-radius: 10px; padding: 1.6rem 1.8rem; margin-bottom: 2.2rem; }
+    .summary-card .sc-label { font-family: 'Arial', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--forest-mid); margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.4rem; }
+    .summary-card p { font-family: 'Arial', sans-serif; font-size: 0.93rem; color: var(--stone); margin-bottom: 0; line-height: 1.6; }
+
+    blockquote.pull { margin: 2rem 0; border-left: 3px solid var(--ember); padding: 0.4rem 0 0.4rem 1.5rem; font-size: 1.25rem; font-style: italic; color: var(--forest); line-height: 1.5; }
+
+    /* ── COMPARE ── */
+    .compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:2rem 0; align-items:stretch; }
+    .compare-card { border-radius:10px; padding:1.4rem 1.5rem; }
+    .compare-card.old { background:var(--ember-pale); border:1.5px solid rgba(200,82,26,0.25); }
+    .compare-card.new { background:rgba(45,74,45,0.07); border:1.5px solid rgba(45,74,45,0.25); }
+    .compare-card .cc-label { font-family:'Arial',sans-serif; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.6rem; display:block; }
+    .compare-card.old .cc-label { color:var(--ember); }
+    .compare-card.new .cc-label { color:var(--forest-mid); }
+    .compare-card p { font-family:'Arial',sans-serif; font-size:0.92rem; margin-bottom:0; color:var(--charcoal); }
+
+    /* ── GROWTH STAGES ── */
+    .stage-list { margin: 2rem 0; }
+    .stage { display:flex; gap:1.1rem; margin-bottom: 0; }
+    .stage-marker { flex-shrink:0; display:flex; flex-direction:column; align-items:center; }
+    .stage-dot { width:1rem; height:1rem; border-radius:50%; background:var(--forest); }
+    .stage-line { width:2px; flex:1; background: rgba(45,74,45,0.25); min-height: 2.2rem; }
+    .stage:last-child .stage-line { display:none; }
+    .stage-body { padding-bottom: 1.6rem; }
+    .stage-body h4 { font-size:1rem; color:var(--charcoal); margin-bottom:0.35rem; }
+    .stage-body p { font-family:'Arial',sans-serif; font-size:0.92rem; color:var(--stone); margin-bottom:0; }
+
+    /* ── NOTE / ASIDE BOX ── */
+    .note-box { background: var(--ember-pale); border: 1.5px solid rgba(200,82,26,0.25); border-radius: 10px; padding: 1.6rem 1.8rem; margin: 2.2rem 0; }
+    .note-box .nb-label { font-family: 'Arial', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ember); margin-bottom: 0.7rem; display: block; }
+    .note-box p { margin-bottom: 0; font-size: 0.98rem; color: var(--charcoal); }
+    .note-box p + p { margin-top: 0.8rem; }
+
+    /* ── SERIES NAV ── */
+    .series-nav { max-width: 700px; margin: 1rem auto 0; padding: 1.5rem 1.5rem 0; border-top: 1px solid rgba(200,82,26,0.15); }
+    .series-nav .series-label { font-family: 'Arial', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--stone); margin-bottom: 0.8rem; display: block; }
+    .series-row { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .series-item { font-family: 'Arial', sans-serif; font-size: 0.9rem; color: var(--stone); padding: 0.7rem 0; }
+    .series-item a { color: var(--ember); text-decoration: none; }
+    .series-item a:hover { text-decoration: underline; }
+    .series-item.next-disabled { opacity: 0.5; }
+
+    .join-nudge { max-width: 700px; margin: 2.5rem auto 4rem; padding: 0 1.5rem; }
+    .join-nudge-inner { background: var(--ink); border-radius: 12px; padding: 2rem; text-align: center; color: #fff; }
+    .join-nudge-inner p { font-family: 'Arial', sans-serif; font-size: 0.92rem; color: rgba(255,255,255,0.6); margin-bottom: 1.1rem; }
+    .btn-join { display: inline-block; background: var(--ember); color: #fff; padding: 0.8rem 2rem; border-radius: 7px; text-decoration: none; font-family: 'Arial', sans-serif; font-weight: bold; font-size: 0.95rem; transition: background 0.2s; }
+    .btn-join:hover { background: var(--ember-light); }
+
+    footer { background: var(--charcoal); color: rgba(255,255,255,0.55); padding: 3rem 2rem; text-align: center; }
+    footer .footer-logo { font-size: 1.3rem; color: var(--ember-light); margin-bottom: 0.5rem; display: block; }
+    footer p { font-family: 'Arial', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.45); margin-bottom: 0.4rem; }
+    footer a { color: var(--ember-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+    .footer-links a { font-family: 'Arial', sans-serif; font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+
+    @media (max-width: 560px) {
+      .article-hero { padding: 3.5rem 1.2rem 2.5rem; }
+      .series-row { flex-direction: column; gap: 0.3rem; }
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html">🔥 Искра жизни</a>
+  <span class="sep">/</span>
+  <a href="blog.html">Блог</a>
+  <span class="sep">/</span>
+  <span class="current">Организационно-правовая форма</span>
+</header>
+
+<div class="article-hero">
+  <span class="hero-eyebrow">Сеть родительских клубов</span>
+  <h1>Часть 8. <em>Организационно-правовая форма</em></h1>
+  <div class="article-meta">
+    <span>9 мая 2025</span>
+    <span class="dot">·</span>
+    <span>19:57</span>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <div class="summary-card">
+    <span class="sc-label">📝 Коротко о главном</span>
+    <p>
+      Проект по развитию детей и взрослых построен на принципе создания среды развития, а не обучения.
+      Начинается всё с родительских клубов, где создаются условия для роста без принуждения. В
+      перспективе развитие приведёт к кооперативам с солидарной ответственностью. Важен постепенный
+      рост — от неформального общения и мини-мастерских к кооперативным структурам и общественным
+      делам.
+    </p>
+  </div>
+
+  <p class="lede">
+    Среда развития детей и взрослых — vs — образовательная система. На модели семечки понятно, что
+    образовать никого невозможно. Семечка уже рождается конкретной, но неизвестной окружающим —
+    ромашка или баобаб. Можно только создать условия, чтобы в каждый момент каждая семечка жадно
+    всасывала то, в чём нуждается прямо сейчас. Это природосообразный подход, работающий по законам
+    живых систем — среда развития детей и взрослых, сеть очагов адекватности. Но это непонятно
+    стороннему человеку, поэтому решили начинать с сети родительских клубов. Это ещё и по
+    экономическим и организационным причинам здраво.
+  </p>
+
+  <h2 class="section-h">Почему в перспективе — кооператив</h2>
+
+  <p>
+    Сам проект по законам живых систем обязан функционировать на кооперативном фундаменте. Внутри
+    должна выращиваться солидарная экономическая модель и солидарное мышление — что и так заложено в
+    кровеносную систему проекта через выращивание доверия, которое идёт в крепкой сцепке с
+    ответственностью. Но жёлудь — ещё не дуб. И наша сеть на пике развития в форме кооперативов с
+    юридической субсидиарной ответственностью — до неё ещё должна дорасти, стартуя с родительских
+    клубов, ни к чему не обязывающих и ничем не владеющих в виде материальных и интеллектуальных
+    ценностей.
+  </p>
+
+  <h2 class="section-h">Вторая причина: другая психофизиология</h2>
+
+  <p>
+    Если это услуга — родитель отдал ребёнка, заплатил, уехал по своим делам и не включён. А нам это
+    зачем? Мы такие же родители, просто на шаг дальше сдвинулись и готовы делиться опытом, но шаги
+    придётся делать самим родителям, заинтересованным в самостоятельности своих детей во взрослой
+    жизни.
+  </p>
+
+  <div class="compare-grid">
+    <div class="compare-card old">
+      <span class="cc-label">Услуга</span>
+      <p>Родитель отдал ребёнка, заплатил, уехал по своим делам — и не включён. У ребёнка и родителя запускается другая психофизиология.</p>
+    </div>
+    <div class="compare-card new">
+      <span class="cc-label">Кооператив</span>
+      <p>Все родители включены в выращивание среды и её качества — ради общей цели: реализованности и счастья своих детей.</p>
+    </div>
+  </div>
+
+  <p>
+    Можете себе представить? Больше ни почему — можно оставить только этот аргумент. Мы все родители
+    заинтересованы во включённости друг друга в выращивание такой среды, ради одной общей цели —
+    реализованности и счастья своих детей и, как следствие, нашего спокойствия за их судьбу.
+  </p>
+
+  <h2 class="section-h">Путь роста: от клуба к кооперативу</h2>
+
+  <div class="stage-list">
+    <div class="stage">
+      <div class="stage-marker"><div class="stage-dot"></div><div class="stage-line"></div></div>
+      <div class="stage-body">
+        <h4>Ближайшее окружение</h4>
+        <p>То, что прямо под ногами, на расстоянии вытянутой руки — сначала друзья, друзья друзей, знакомые, незнакомые, но близкие по духу.</p>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="stage-marker"><div class="stage-dot"></div><div class="stage-line"></div></div>
+      <div class="stage-body">
+        <h4>Устные договорённости</h4>
+        <p>Общие мини-мастерские, творчество, дела, обучение — это и есть родительский клуб.</p>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="stage-marker"><div class="stage-dot"></div><div class="stage-line"></div></div>
+      <div class="stage-body">
+        <h4>Экспедиции, поездки к мастерам</h4>
+        <p>По мере сгущения людей, событий, идей и их воплощения.</p>
+      </div>
+    </div>
+    <div class="stage">
+      <div class="stage-marker"><div class="stage-dot"></div></div>
+      <div class="stage-body">
+        <h4>Общественные структуры</h4>
+        <p>Общественные дачи, общественные мастерские, кооперативные бизнесы — это логично и неизбежно.</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="note-box">
+    <span class="nb-label">Для новичков</span>
+    <p>
+      Организованы стыковочные модули. К ним в разовом формате можно присоединяться, присматриваться,
+      принюхиваться, что-то открывать в себе, наблюдать за ребёнком — и решать о более плотном
+      участии.
+    </p>
+  </div>
+
+  <blockquote class="pull">
+    Кооператив как организационно-правовая форма со всей субсидиарной ответственностью — это более
+    дальняя история, до неё нужно будет дорасти.
+  </blockquote>
+
+</div>
+
+<div class="series-nav">
+  <span class="series-label">Серия «Сеть родительских клубов»</span>
+  <div class="series-row">
+    <span class="series-item"><a href="zhivaya-sistema-7.html">← Часть 7. Методологическое ядро</a></span>
+    <span class="series-item"><a href="zhivaya-sistema-9.html">Часть 9. Внутренний компас и вечный двигатель →</a></span>
+  </div>
+</div>
+
+<div class="join-nudge">
+  <div class="join-nudge-inner">
+    <p>Если этот взгляд на выращивание живой системы отзывается — присоединяйтесь к сообществу родителей, которые растят самостоятельность детей вместе.</p>
+    <a href="index.html#join" class="btn-join">Подать заявку на участие →</a>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-logo">🔥 Искра жизни</span>
+  <p>Родительская инициатива семейного экспериментального творчества</p>
+  <p>По вопросам участия: <a href="mailto:info@iskrazhizni.ru">info@iskrazhizni.ru</a></p>
+  <div class="footer-links">
+    <a href="index.html#about">О проекте</a>
+    <a href="index.html#principles">Принципы</a>
+    <a href="index.html#quiz">Опросники</a>
+    <a href="index.html#join">Присоединиться</a>
+  </div>
+  <p style="margin-top:2rem; font-size:0.75rem; opacity:0.3;">© 2026 Искра жизни</p>
+</footer>
+
+</body>
+</html>

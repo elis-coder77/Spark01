@@ -1,0 +1,302 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Часть 9. Внутренний компас и вечный двигатель — как работают — Искра жизни</title>
+  <style>
+    :root {
+      --ember:      #C8521A;
+      --ember-light:#E07040;
+      --ember-pale: #FAE8DC;
+      --forest:     #2D4A2D;
+      --forest-mid: #3D6B3D;
+      --cream:      #FDF8F3;
+      --stone:      #6B6457;
+      --charcoal:   #2A2520;
+      --ink:        #16120E;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Georgia', serif; background: var(--cream); color: var(--charcoal); line-height: 1.7; }
+
+    .site-header { background: var(--ink); padding: 1rem 2rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .site-header a { color: rgba(255,255,255,0.55); font-family:'Arial',sans-serif; font-size:0.85rem; text-decoration:none; }
+    .site-header a:hover { color: #fff; }
+    .site-header .sep { color: rgba(255,255,255,0.2); }
+    .site-header .current { color: rgba(255,255,255,0.4); font-family:'Arial',sans-serif; font-size:0.85rem; }
+
+    .article-hero { background: var(--ink); padding: 4.5rem 2rem 3.5rem; text-align: center; }
+    .hero-eyebrow { font-family: 'Arial', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(255,255,255,0.35); margin-bottom: 1.2rem; display: block; }
+    .article-hero h1 { font-size: clamp(1.7rem, 4.2vw, 2.7rem); color: #fff; line-height: 1.28; margin-bottom: 1.2rem; max-width: 760px; margin-left: auto; margin-right: auto; letter-spacing: -0.01em; }
+    .article-hero h1 em { color: var(--ember-light); font-style: normal; }
+    .article-meta { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; font-family: 'Arial', sans-serif; font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+    .article-meta .dot { color: rgba(255,255,255,0.2); }
+
+    .article-wrap { max-width: 700px; margin: 0 auto; padding: 3.2rem 1.5rem 2rem; }
+    .lede { font-size: 1.12rem; color: var(--charcoal); margin-bottom: 1.5rem; }
+    .article-wrap p { font-size: 1.05rem; color: var(--charcoal); margin-bottom: 1.4rem; }
+    .article-wrap p strong { color: var(--ember); }
+    .article-wrap a.inline-link { color: var(--ember); }
+    h2.section-h { font-size: 1.4rem; color: var(--forest-mid); margin: 2.6rem 0 1.2rem; line-height: 1.35; }
+
+    blockquote.pull { margin: 2rem 0; border-left: 3px solid var(--ember); padding: 0.4rem 0 0.4rem 1.5rem; font-size: 1.25rem; font-style: italic; color: var(--forest); line-height: 1.5; }
+
+    /* ── Q&A NOTE ── */
+    .note-box { background: var(--ember-pale); border: 1.5px solid rgba(200,82,26,0.25); border-radius: 10px; padding: 1.6rem 1.8rem; margin: 2.2rem 0; }
+    .note-box .nb-label { font-family: 'Arial', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ember); margin-bottom: 0.7rem; display: block; }
+    .note-box p { margin-bottom: 0; font-size: 0.98rem; color: var(--charcoal); }
+    .note-box p + p { margin-top: 0.8rem; }
+
+    /* ── CYCLE DIAGRAM ── */
+    .cycle-list { margin: 2rem 0; background:#fff; border:1px solid rgba(45,74,45,0.15); border-radius:12px; padding: 1.8rem; }
+    .cycle-step { display:flex; align-items:flex-start; gap:1rem; padding: 0.7rem 0; }
+    .cycle-num { flex-shrink:0; width:1.9rem; height:1.9rem; border-radius:50%; background:var(--forest); color:#fff; display:flex; align-items:center; justify-content:center; font-family:'Arial',sans-serif; font-weight:bold; font-size:0.85rem; }
+    .cycle-text { font-family:'Arial',sans-serif; font-size:0.94rem; color:var(--charcoal); padding-top:0.2rem; }
+    .cycle-arrow { text-align:center; color: rgba(45,74,45,0.4); font-size:1.1rem; padding-left: 0.95rem; }
+    .cycle-loop { text-align:center; font-family:'Arial',sans-serif; font-size:0.82rem; color:var(--ember); margin-top:0.5rem; }
+
+    /* ── BICYCLE / TWO CHANNELS ── */
+    .wheel-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin: 2rem 0 0.5rem; }
+    .wheel-card { background:#fff; border:1.5px solid rgba(45,74,45,0.2); border-radius:10px; padding:1.5rem; text-align:center; }
+    .wheel-card .wc-icon { font-size:1.8rem; margin-bottom:0.5rem; }
+    .wheel-card h4 { font-size:1rem; color:var(--forest-mid); margin-bottom:0.4rem; }
+    .wheel-card p { font-family:'Arial',sans-serif; font-size:0.85rem; color:var(--stone); margin-bottom:0; }
+    .wheel-note { text-align:center; font-family:'Arial',sans-serif; font-size:0.82rem; color:var(--stone); margin: 0.8rem 0 2rem; font-style: italic; }
+
+    /* ── DARK CLOSING BOX ── */
+    .dark-box { background: var(--ink); color:#fff; border-radius:12px; padding:2.2rem; margin:2.2rem 0 1rem; }
+    .dark-box .db-label { font-family:'Arial',sans-serif; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:rgba(255,255,255,0.35); margin-bottom:1rem; display:block; }
+    .dark-box p { color:rgba(255,255,255,0.8); font-size:1rem; margin-bottom:1rem; }
+    .dark-box p:last-child { margin-bottom:0; }
+    .dark-box p strong { color: var(--ember-light); }
+
+    /* ── SERIES NAV ── */
+    .series-nav { max-width: 700px; margin: 1rem auto 0; padding: 1.5rem 1.5rem 0; border-top: 1px solid rgba(200,82,26,0.15); }
+    .series-nav .series-label { font-family: 'Arial', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--stone); margin-bottom: 0.8rem; display: block; }
+    .series-row { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .series-item { font-family: 'Arial', sans-serif; font-size: 0.9rem; color: var(--stone); padding: 0.7rem 0; }
+    .series-item a { color: var(--ember); text-decoration: none; }
+    .series-item a:hover { text-decoration: underline; }
+    .series-item.next-disabled { opacity: 0.5; }
+
+    .join-nudge { max-width: 700px; margin: 2.5rem auto 4rem; padding: 0 1.5rem; }
+    .join-nudge-inner { background: var(--ink); border-radius: 12px; padding: 2rem; text-align: center; color: #fff; }
+    .join-nudge-inner p { font-family: 'Arial', sans-serif; font-size: 0.92rem; color: rgba(255,255,255,0.6); margin-bottom: 1.1rem; }
+    .btn-join { display: inline-block; background: var(--ember); color: #fff; padding: 0.8rem 2rem; border-radius: 7px; text-decoration: none; font-family: 'Arial', sans-serif; font-weight: bold; font-size: 0.95rem; transition: background 0.2s; }
+    .btn-join:hover { background: var(--ember-light); }
+
+    footer { background: var(--charcoal); color: rgba(255,255,255,0.55); padding: 3rem 2rem; text-align: center; }
+    footer .footer-logo { font-size: 1.3rem; color: var(--ember-light); margin-bottom: 0.5rem; display: block; }
+    footer p { font-family: 'Arial', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.45); margin-bottom: 0.4rem; }
+    footer a { color: var(--ember-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+    .footer-links a { font-family: 'Arial', sans-serif; font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+
+    @media (max-width: 560px) {
+      .article-hero { padding: 3.5rem 1.2rem 2.5rem; }
+      .series-row { flex-direction: column; gap: 0.3rem; }
+      .wheel-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html">🔥 Искра жизни</a>
+  <span class="sep">/</span>
+  <a href="blog.html">Блог</a>
+  <span class="sep">/</span>
+  <span class="current">Внутренний компас и вечный двигатель</span>
+</header>
+
+<div class="article-hero">
+  <span class="hero-eyebrow">Сеть родительских клубов · Самостоятельность детей</span>
+  <h1>Часть 9. <em>Внутренний компас и вечный двигатель — как работают</em></h1>
+  <div class="article-meta">
+    <span>13 мая 2025</span>
+    <span class="dot">·</span>
+    <span>17:12</span>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <p class="lede">
+    Последнее пояснение. Визуальные опоры, которые были в самом начале отправлены сюда, — семечка,
+    включённая в матрёшку живых систем. И механизмы ориентировки/адаптации, которые в неё заложены,
+    работают по очень простому механизму — обратной связи. Импульс — потребность — удовлетворение.
+    Всё. Пока не замкнётся петля обратной связи и человек не получит то, что им двигало, когда возник
+    импульс. В момент замыкания петли — прилив энергии, воодушевление — и новый импульс с движением от
+    потребности к удовлетворению. И так бесконечно — эдакий вечный двигатель внутри каждого человека в
+    любом возрасте.
+  </p>
+
+  <p>
+    Не буду сейчас вдаваться в подробности, что такое потребность, — иначе начнётся «а если у него
+    потребность в сладком, в гаджетах, в диване, в наркотиках?». Пока без нюансов, чтобы не засорять
+    эфир. Берём простую модель и говорим о здоровых потребностях. Они двух типов: либо нужда
+    (неудовлетворённость), либо устремление, мечта, импульс, позыв, искра божья. В каждом возрасте
+    детей — свои потребности и ведущие познавательные активности. Это важно для выстраивания здоровой
+    среды развития детей.
+  </p>
+
+  <h2 class="section-h">Кто задаёт эталон «то / не то»?</h2>
+
+  <div class="note-box">
+    <span class="nb-label">Вопрос</span>
+    <p>По какой шкале меряется удовлетворённость «то / не то»? Откуда берутся критерии, что потребность реализована, или что нужна корректировка?</p>
+    <p>
+      Логично, что у ромашки шкала и критерии одни, у баобаба — другие. Значит, они сразу заложены в
+      каждую семечку и поставляются в полной комплектации при рождении. Таким индикатором внутри
+      каждого человека является его сенсорная система, органы чувств — эдакая красная лампочка в
+      машине, которая сигналит ромашке или баобабу об отклонении от эталонного для них состояния.
+    </p>
+  </div>
+
+  <p>
+    Вопрос: в машину кто закладывает эталонное состояние, вокруг которого загораются датчики,
+    сигнализирующие об отклонении и необходимости вмешаться? А в человека кто закладывает?
+  </p>
+
+  <h2 class="section-h">Петля обратной связи — вечный двигатель</h2>
+
+  <p>
+    Вечный двигатель внутри живой системы (ребёнка, взрослого, семьи) — движение от потребности к
+    удовлетворению через обратную связь:
+  </p>
+
+  <div class="cycle-list">
+    <div class="cycle-step"><div class="cycle-num">1</div><div class="cycle-text">Возникает потребность, импульс</div></div>
+    <div class="cycle-step"><div class="cycle-num">2</div><div class="cycle-text">Внутри рождается образ будущего результата</div></div>
+    <div class="cycle-step"><div class="cycle-num">3</div><div class="cycle-text">Совершается действие для его реализации</div></div>
+    <div class="cycle-step"><div class="cycle-num">4</div><div class="cycle-text">Приходит обратная связь на совершённое действие</div></div>
+    <div class="cycle-step"><div class="cycle-num">5</div><div class="cycle-text">Сверяется с образом — вердикт «то / не то»</div></div>
+    <div class="cycle-step"><div class="cycle-num">6</div><div class="cycle-text">Удовлетворённость от реализованной потребности — либо корректировка и новое действие, пока не достигается «то»</div></div>
+    <div class="cycle-loop">↻ и цикл повторяется снова</div>
+  </div>
+
+  <p>
+    Механизм обратной связи (вечный двигатель) работает внутри семечки, а семечка — внутри матрёшки
+    живых систем, где каждая линия — это отдельная надсистема со своими закономерностями и науками,
+    их описывающими: анатомия, психофизиология, возрастная психология, нейробиология, эволюционная
+    биология, социальная инженерия, экономика, геополитика и так далее. При этом надсистемы влияют на
+    вложенные системы — то есть все слои матрёшки шевелятся и меняются ежемгновенно, и ежемгновенно
+    влияют на семечку-человека.
+  </p>
+
+  <h2 class="section-h">Сенсорная система как супер-компьютер</h2>
+
+  <p>
+    Вы хоть как-то можете себе эту сложность представить? Кем — чем — где — как она управляется? Так
+    вот, хорошая новость в том, что у сложной природы всё предусмотрено и всё просто. В этой
+    сложности, многомерности и текучести всех слоёв матрёшки природа сформировала механизм ориентировки
+    семечки-человека в любой ситуации — через внутреннюю сенсорную систему. С каждой семечкой
+    поставляется своя шкала оценки происходящего. И эта шкала управляется неким супер-компьютером,
+    который происходящее на каждом слое матрёшки мгновенно суммирует, сравнивает с образом результата
+    и выдаёт решение, оптимальное для всех уровней матрёшки, — и делает это до осознания человеком.
+  </p>
+
+  <blockquote class="pull">
+    Изучите самостоятельно
+    <a class="inline-link" href="https://reminder.media/post/svoboda-voli-vse-zhe-sushchestvuet-neyrobiologi-peredumali" target="_blank" rel="noopener">эксперимент Либета</a>,
+    когда зоны мозга у людей, ответственные за принятие решений, активируются раньше, чем человек
+    думает, что он принял решение. Более сложным научным языком — из
+    <a class="inline-link" href="http://www.ipras.ru/engine/documents/shvirkov.pdf" target="_blank" rel="noopener">экспериментов физиолога Анохина П.К.</a>
+    и его теории функциональных систем.
+  </blockquote>
+
+  <h2 class="section-h">Два колеса велосипеда: события и ощущения</h2>
+
+  <p>
+    Вернёмся к хорошей новости, что у природы всё предусмотрено и всё просто — у человека всего два
+    канала поступления обратной связи: внешние события и внутренние ощущения. Всего лишь два! По ним в
+    любом возрасте происходит ориентировка «то / не то».
+  </p>
+
+  <div class="wheel-grid">
+    <div class="wheel-card">
+      <div class="wc-icon">🌍</div>
+      <h4>События</h4>
+      <p>Внешний канал обратной связи — то, что происходит в реальности вокруг.</p>
+    </div>
+    <div class="wheel-card">
+      <div class="wc-icon">💓</div>
+      <h4>Ощущения</h4>
+      <p>Внутренний канал обратной связи — телесный и эмоциональный отклик.</p>
+    </div>
+  </div>
+  <p class="wheel-note">Как два колеса велосипеда — работают только в связке, оба сразу, и только в движении. Нет более главного.</p>
+
+  <p>
+    При этом велосипед должен ехать — то есть человек должен быть сцеплен с реальностью и решать свои
+    жизненные задачи, а не абстрактно-гипотетические или чужие.
+  </p>
+
+  <p>
+    В любом возрасте самому закрывать свои потребности, пропуская опыт через тело, — важнейший фактор
+    до 10 лет, практически удалённый из современных детских садов и школ, да и семьи тоже. Потребность
+    в еде, одежде, в заботе о близких, в нужности и значимости, в созидании среды жизни — вряд ли
+    удовлетворяется детьми при поддержке родителей, социума: проще готовое купить или
+    полуфабрикат/суррогат, чем самому создавать. Но тогда и цели будут достигаться другие. Родители не
+    понимают цепочки последствий на судьбу детей.
+  </p>
+
+  <div class="dark-box">
+    <span class="db-label">Если цепочку не замечать</span>
+    <p>
+      Если дети не реализуют свои здоровые первичные потребности — их вечный двигатель еле дышит,
+      механизм ориентировки и адаптации не распаковывается.
+    </p>
+    <p>
+      Вместо подкидывания дров в топку внутреннего вечного двигателя природной любознательности, чтобы
+      локомотив ребёнка мчал вперёд к новым задачам, — еле-еле теплятся угольки уже к концу начальной
+      школы. И мы имеем <strong>тухлых подростков</strong>, которым мало что интересно.
+    </p>
+    <p>
+      Тут начинаются танцы с бубнами вокруг мотивации, профориентации, индивидуальной траектории,
+      психологической помощи — не говоря про количество подростков на антидепрессантах и с попытками
+      суицида. А источник-то угас, вечный двигатель и внутренний компас заржавели.
+    </p>
+    <p>
+      Велосипед поставили на подпорки, человек/ребёнок вхолостую крутит педали — реализует чужие
+      надуманные потребности, а собственные импульсы гасит. Но вокруг велосипеда бегает армия
+      специалистов, улучшают, смазывают цепь, подкрашивают раму — целые институты учёных подбирают
+      формулы смазок, красок и толкателей. Но велосипед не сцеплен с землёй, с реальностью, с решением
+      жизненных задач, — не растит врождённые зачатки механизмов ориентировки и адаптации.
+    </p>
+  </div>
+
+</div>
+
+<div class="series-nav">
+  <span class="series-label">Серия «Сеть родительских клубов»</span>
+  <div class="series-row">
+    <span class="series-item"><a href="zhivaya-sistema-8.html">← Часть 8. Организационно-правовая форма</a></span>
+    <span class="series-item next-disabled">Продолжение серии — скоро</span>
+  </div>
+</div>
+
+<div class="join-nudge">
+  <div class="join-nudge-inner">
+    <p>Если этот взгляд на выращивание живой системы отзывается — присоединяйтесь к сообществу родителей, которые растят самостоятельность детей вместе.</p>
+    <a href="index.html#join" class="btn-join">Подать заявку на участие →</a>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-logo">🔥 Искра жизни</span>
+  <p>Родительская инициатива семейного экспериментального творчества</p>
+  <p>По вопросам участия: <a href="mailto:info@iskrazhizni.ru">info@iskrazhizni.ru</a></p>
+  <div class="footer-links">
+    <a href="index.html#about">О проекте</a>
+    <a href="index.html#principles">Принципы</a>
+    <a href="index.html#quiz">Опросники</a>
+    <a href="index.html#join">Присоединиться</a>
+  </div>
+  <p style="margin-top:2rem; font-size:0.75rem; opacity:0.3;">© 2026 Искра жизни</p>
+</footer>
+
+</body>
+</html>

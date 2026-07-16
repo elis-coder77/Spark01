@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Часть 2. Учитываем все уровни «матрёшки» живых систем — Искра жизни</title>
+  <style>
+    :root {
+      --ember:      #C8521A;
+      --ember-light:#E07040;
+      --ember-pale: #FAE8DC;
+      --forest:     #2D4A2D;
+      --forest-mid: #3D6B3D;
+      --cream:      #FDF8F3;
+      --stone:      #6B6457;
+      --charcoal:   #2A2520;
+      --ink:        #16120E;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--cream);
+      color: var(--charcoal);
+      line-height: 1.7;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      background: var(--ink);
+      padding: 1rem 2rem;
+      display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+    }
+    .site-header a { color: rgba(255,255,255,0.55); font-family:'Arial',sans-serif; font-size:0.85rem; text-decoration:none; }
+    .site-header a:hover { color: #fff; }
+    .site-header .sep { color: rgba(255,255,255,0.2); }
+    .site-header .current { color: rgba(255,255,255,0.4); font-family:'Arial',sans-serif; font-size:0.85rem; }
+
+    /* ── ARTICLE HERO ── */
+    .article-hero {
+      background: var(--ink);
+      padding: 4.5rem 2rem 3.5rem;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      font-family: 'Arial', sans-serif; font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.16em;
+      color: rgba(255,255,255,0.35); margin-bottom: 1.2rem; display: block;
+    }
+    .article-hero h1 {
+      font-size: clamp(1.8rem, 4.4vw, 2.85rem);
+      color: #fff; line-height: 1.28; margin-bottom: 1.2rem;
+      max-width: 760px; margin-left: auto; margin-right: auto;
+      letter-spacing: -0.01em;
+    }
+    .article-hero h1 em { color: var(--ember-light); font-style: normal; }
+    .article-meta {
+      display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap;
+      font-family: 'Arial', sans-serif; font-size: 0.82rem;
+      color: rgba(255,255,255,0.4);
+    }
+    .article-meta .dot { color: rgba(255,255,255,0.2); }
+
+    /* ── ARTICLE BODY ── */
+    .article-wrap { max-width: 700px; margin: 0 auto; padding: 3.2rem 1.5rem 2rem; }
+    .lede {
+      font-size: 1.12rem; color: var(--charcoal); margin-bottom: 1.5rem;
+    }
+    .article-wrap p {
+      font-size: 1.05rem; color: var(--charcoal);
+      margin-bottom: 1.4rem;
+    }
+    .article-wrap p strong { color: var(--ember); }
+
+    h2.section-h {
+      font-size: 1.4rem; color: var(--forest-mid);
+      margin: 2.6rem 0 1.2rem; line-height: 1.35;
+    }
+
+    /* ── SUMMARY CARD ── */
+    .summary-card {
+      background: #fff; border: 1.5px solid rgba(45,74,45,0.18);
+      border-radius: 10px; padding: 1.6rem 1.8rem; margin-bottom: 2.2rem;
+    }
+    .summary-card .sc-label {
+      font-family: 'Arial', sans-serif; font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--forest-mid); margin-bottom: 0.7rem; display: flex;
+      align-items: center; gap: 0.4rem;
+    }
+    .summary-card p {
+      font-family: 'Arial', sans-serif; font-size: 0.93rem;
+      color: var(--stone); margin-bottom: 0; line-height: 1.6;
+    }
+
+    /* ── PULL QUOTE ── */
+    blockquote.pull {
+      margin: 2rem 0;
+      border-left: 3px solid var(--ember);
+      padding: 0.4rem 0 0.4rem 1.5rem;
+      font-size: 1.25rem; font-style: italic;
+      color: var(--forest); line-height: 1.5;
+    }
+
+    /* ── NOTE / ASIDE BOX ── */
+    .note-box {
+      background: var(--ember-pale); border: 1.5px solid rgba(200,82,26,0.25);
+      border-radius: 10px; padding: 1.6rem 1.8rem; margin: 2.2rem 0;
+    }
+    .note-box .nb-label {
+      font-family: 'Arial', sans-serif; font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--ember); margin-bottom: 0.7rem; display: block;
+    }
+    .note-box p { margin-bottom: 0; font-size: 0.98rem; color: var(--charcoal); }
+
+    /* ── PILLAR CALLOUT ── */
+    .pillar-callout {
+      background: var(--forest); color: #fff;
+      border-radius: 12px; padding: 2rem; margin: 2.2rem 0 1rem;
+    }
+    .pillar-callout .pc-icon { font-size: 1.8rem; margin-bottom: 0.7rem; }
+    .pillar-callout h3 { font-size: 1.15rem; margin-bottom: 0.7rem; color: #fff; }
+    .pillar-callout p {
+      color: rgba(255,255,255,0.75); font-family: 'Arial', sans-serif;
+      font-size: 0.92rem; margin-bottom: 0.7rem;
+    }
+    .pillar-callout p:last-child { margin-bottom: 0; }
+
+    /* ── FIGURE PLACEHOLDER ── */
+    .figure-box {
+      background: #fff; border: 1px solid rgba(45,74,45,0.15);
+      border-radius: 10px; padding: 2.2rem 1.5rem;
+      text-align: center; margin: 2.2rem 0;
+    }
+    .figure-box .fig-icon { font-size: 2.4rem; margin-bottom: 0.7rem; }
+    .figure-box .fig-caption {
+      font-family: 'Arial', sans-serif; font-size: 0.85rem;
+      color: var(--stone); max-width: 460px; margin: 0 auto; line-height: 1.55;
+    }
+
+    /* ── SERIES NAV ── */
+    .series-nav {
+      max-width: 700px; margin: 1rem auto 0; padding: 1.5rem 1.5rem 0;
+      border-top: 1px solid rgba(200,82,26,0.15);
+    }
+    .series-nav .series-label {
+      font-family: 'Arial', sans-serif; font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--stone); margin-bottom: 0.8rem; display: block;
+    }
+    .series-row { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .series-item {
+      font-family: 'Arial', sans-serif; font-size: 0.9rem;
+      color: var(--stone); padding: 0.7rem 0;
+    }
+    .series-item a { color: var(--ember); text-decoration: none; }
+    .series-item a:hover { text-decoration: underline; }
+    .series-item.next-disabled { opacity: 0.5; }
+
+    /* ── JOIN NUDGE ── */
+    .join-nudge {
+      max-width: 700px; margin: 2.5rem auto 4rem; padding: 0 1.5rem;
+    }
+    .join-nudge-inner {
+      background: var(--ink); border-radius: 12px;
+      padding: 2rem; text-align: center; color: #fff;
+    }
+    .join-nudge-inner p {
+      font-family: 'Arial', sans-serif; font-size: 0.92rem;
+      color: rgba(255,255,255,0.6); margin-bottom: 1.1rem;
+    }
+    .btn-join {
+      display: inline-block; background: var(--ember); color: #fff;
+      padding: 0.8rem 2rem; border-radius: 7px; text-decoration: none;
+      font-family: 'Arial', sans-serif; font-weight: bold; font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .btn-join:hover { background: var(--ember-light); }
+
+    /* ── FOOTER (matches index) ── */
+    footer {
+      background: var(--charcoal); color: rgba(255,255,255,0.55);
+      padding: 3rem 2rem; text-align: center;
+    }
+    footer .footer-logo {
+      font-size: 1.3rem; color: var(--ember-light);
+      margin-bottom: 0.5rem; display: block;
+    }
+    footer p {
+      font-family: 'Arial', sans-serif; font-size: 0.85rem;
+      color: rgba(255,255,255,0.45); margin-bottom: 0.4rem;
+    }
+    footer a { color: var(--ember-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links {
+      display: flex; gap: 1.5rem; justify-content: center;
+      margin-top: 1rem; flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-family: 'Arial', sans-serif; font-size: 0.82rem;
+      color: rgba(255,255,255,0.4);
+    }
+
+    @media (max-width: 560px) {
+      .article-hero { padding: 3.5rem 1.2rem 2.5rem; }
+      .series-row { flex-direction: column; gap: 0.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html">🔥 Искра жизни</a>
+  <span class="sep">/</span>
+  <a href="blog.html">Блог</a>
+  <span class="sep">/</span>
+  <span class="current">Уровни «матрёшки» живых систем</span>
+</header>
+
+<div class="article-hero">
+  <span class="hero-eyebrow">Сеть родительских клубов</span>
+  <h1>Часть 2. <em>Учитываем все уровни «матрёшки» живых систем</em></h1>
+  <div class="article-meta">
+    <span>9 мая 2025</span>
+    <span class="dot">·</span>
+    <span>00:54</span>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <div class="summary-card">
+    <span class="sc-label">📝 Коротко о главном</span>
+    <p>
+      Развитие человека — это развитие живой системы, вложенной в иерархию бо́льших надсистем: семья,
+      город, страна, природа. Ребёнок рождается как конкретная «семечка» со встроенными механизмами
+      развития, которые раскрываются в правильной среде. Задача родителей и среды — создать условия,
+      где эти механизмы могут полноценно работать, чтобы вырастающий человек мог адаптироваться и
+      эффективно действовать в жизни. Цель — помочь ребёнку стать реализованным и счастливым.
+    </p>
+  </div>
+
+  <p class="lede">
+    Здесь звучало противоречие о том, индивидуальная траектория или групповой процесс. И то, и
+    другое. <strong>И-И вместо ИЛИ-ИЛИ</strong> — тоже будет нас всю дорогу сопровождать.
+  </p>
+
+  <p>
+    Представьте матрёшку иерархии живых систем — человек вложен в семью, в коллектив, в расширенную
+    семью (бабушки-дедушки), в город, регион, страну, геополитическую обстановку, ландшафт, в котором
+    он родился, а потом развитие происходило. Вот это всё непрерывно, одновременно — все слои
+    матрёшки — шевелятся и ежемгновенно влияют на вложенные элементы, на семечко, на человека. И нам,
+    чтобы выстраивать среду развития детей и взрослых — здоровую и природосообразную — необходимо
+    одновременно все линии и все уровни надсистем учитывать и вести. И индивидуальную, и групповую,
+    коллективную, общинную, и другие. Представляете? И теперь с этим всем попробуем взлететь.
+  </p>
+
+  <h2 class="section-h">Семечка, а не чистый лист</h2>
+
+  <p>
+    Да, рождается семечка — мы эту модель принимаем. Кто считает, что рождается белый холст, на
+    котором родители, учителя, государство, корпорации рисуют свою картину по своему усмотрению —
+    мы исходим из другой модели.
+  </p>
+
+  <div class="note-box">
+    <span class="nb-label">Исходная посылка</span>
+    <p>
+      Рождается семечка с уже заданными параметрами, и никто не знает — это ромашка или баобаб, ни
+      родители, ни ребёнок не знают. Но это уже конкретная семечка. И задача детства, становления
+      личности, взросления — это бесконечное по спирали «узнавание — реализация — узнавание —
+      реализация», бесконечное «кто я?» и «куда я?» через действия, через тело.
+    </p>
+  </div>
+
+  <p>
+    Любая мама, у которой двое и больше детей, знает: вот ты держишь в руках второго новорождённого,
+    50 см и 3 кг, и он совершенно другой, чем был первый. Мамы это лучше всех знают в первые секунды
+    контакта с младенцем — эта семечка уже конкретная. И дальше эту модель семечки будем всё время
+    держать в уме, и её вложенность в матрёшку бо́льших надсистем — всегда учитывать. Потому что это
+    не статичная семечка. Жёлудь — ещё не дуб, а только потенциал дуба, у него масса промежуточных
+    стадий: корешок, росток — и на всех не понятно до конца, что это в итоге получится.
+  </p>
+
+  <h2 class="section-h">Встроенные механизмы ориентировки</h2>
+
+  <p>
+    Казалось бы, невероятная сложность — как с ней управляться, неисповедимы пути Господни, по каким
+    это всё функционирует законам? Но хорошая новость в том, что каждая живая система рождается с уже
+    вложенными, отработанными миллионами лет эволюции механизмами ориентировки и адаптации.
+    Безупречнее ничего природа не придумала. И мы, как родители, если мы про своих детей говорим, даже
+    близко не можем приблизиться к безупречности этого внутреннего механизма.
+  </p>
+
+  <blockquote class="pull">
+    Каждая живая система рождается с уже вложенными, отработанными миллионами лет эволюции
+    механизмами ориентировки и адаптации.
+  </blockquote>
+
+  <p>
+    Это не отменяет и не значит, что ребёнок с рождения знает, что делать, — давайте его оставим в
+    покое. Никто не отменял того, что эти механизмы тоже в потенциале заложены — в этот жёлудь, в эту
+    семечку. Тоже нужны определённые условия для их раскрытия и работы на полную катушку. И наша среда
+    развития детей и взрослых призвана к тому, чтобы её организация соответствовала тем самым законам
+    живых систем — чтобы вложенные механизмы ориентировки и адаптации в итоге работали полноценно, и
+    выходящий во взрослую жизнь 18-летний человек мог сориентироваться в любой ситуации, мог найти
+    решение, сообщников — и эффективно, природосообразно действовать. И тогда это сможет дать
+    родителям спокойствие за судьбу ребёнка.
+  </p>
+
+  <h2 class="section-h">Цель — реализованность и счастье</h2>
+
+  <p>
+    Когда я проводила опрос многих родителей о том, что они хотят для судьбы своих детей, — был
+    короткий, универсальный ответ: чтобы ребёнок был реализован и счастлив. В этих двух словах — как
+    раз целый список того, что необходимо, чтобы он был таким в каждый момент времени.
+  </p>
+
+  <div class="pillar-callout">
+    <div class="pc-icon">🌳</div>
+    <h3>Среда развития</h3>
+    <p>
+      Именно среда развития детей и взрослых призвана природные механизмы запустить и сделать так,
+      чтобы они работали уже самостоятельно — как и задумано природой.
+    </p>
+  </div>
+
+</div>
+
+<div class="series-nav">
+  <span class="series-label">Серия «Сеть родительских клубов»</span>
+  <div class="series-row">
+    <span class="series-item"><a href="zhivaya-sistema-1.html">← Часть 1. Выращиваем живую систему</a></span>
+    <span class="series-item"><a href="zhivaya-sistema-3.html">Часть 3. Целевая аудитория →</a></span>
+  </div>
+</div>
+
+<div class="join-nudge">
+  <div class="join-nudge-inner">
+    <p>Если этот взгляд на выращивание живой системы отзывается — присоединяйтесь к сообществу родителей, которые растят самостоятельность детей вместе.</p>
+    <a href="index.html#join" class="btn-join">Подать заявку на участие →</a>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-logo">🔥 Искра жизни</span>
+  <p>Родительская инициатива семейного экспериментального творчества</p>
+  <p>По вопросам участия: <a href="mailto:info@iskrazhizni.ru">info@iskrazhizni.ru</a></p>
+  <div class="footer-links">
+    <a href="index.html#about">О проекте</a>
+    <a href="index.html#principles">Принципы</a>
+    <a href="index.html#quiz">Опросники</a>
+    <a href="index.html#join">Присоединиться</a>
+  </div>
+  <p style="margin-top:2rem; font-size:0.75rem; opacity:0.3;">© 2026 Искра жизни</p>
+</footer>
+
+</body>
+</html>

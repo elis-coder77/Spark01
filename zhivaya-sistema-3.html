@@ -1,0 +1,428 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Часть 3. Целевая аудитория — Искра жизни</title>
+  <style>
+    :root {
+      --ember:      #C8521A;
+      --ember-light:#E07040;
+      --ember-pale: #FAE8DC;
+      --forest:     #2D4A2D;
+      --forest-mid: #3D6B3D;
+      --cream:      #FDF8F3;
+      --stone:      #6B6457;
+      --charcoal:   #2A2520;
+      --ink:        #16120E;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--cream);
+      color: var(--charcoal);
+      line-height: 1.7;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      background: var(--ink);
+      padding: 1rem 2rem;
+      display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap;
+    }
+    .site-header a { color: rgba(255,255,255,0.55); font-family:'Arial',sans-serif; font-size:0.85rem; text-decoration:none; }
+    .site-header a:hover { color: #fff; }
+    .site-header .sep { color: rgba(255,255,255,0.2); }
+    .site-header .current { color: rgba(255,255,255,0.4); font-family:'Arial',sans-serif; font-size:0.85rem; }
+
+    /* ── ARTICLE HERO ── */
+    .article-hero {
+      background: var(--ink);
+      padding: 4.5rem 2rem 3.5rem;
+      text-align: center;
+    }
+    .hero-eyebrow {
+      font-family: 'Arial', sans-serif; font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.16em;
+      color: rgba(255,255,255,0.35); margin-bottom: 1.2rem; display: block;
+    }
+    .article-hero h1 {
+      font-size: clamp(1.9rem, 4.6vw, 3rem);
+      color: #fff; line-height: 1.28; margin-bottom: 1.2rem;
+      max-width: 760px; margin-left: auto; margin-right: auto;
+      letter-spacing: -0.01em;
+    }
+    .article-hero h1 em { color: var(--ember-light); font-style: normal; }
+    .article-meta {
+      display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap;
+      font-family: 'Arial', sans-serif; font-size: 0.82rem;
+      color: rgba(255,255,255,0.4);
+    }
+    .article-meta .dot { color: rgba(255,255,255,0.2); }
+
+    /* ── ARTICLE BODY ── */
+    .article-wrap { max-width: 700px; margin: 0 auto; padding: 3.2rem 1.5rem 2rem; }
+    .lede {
+      font-size: 1.12rem; color: var(--charcoal); margin-bottom: 1.5rem;
+    }
+    .article-wrap p {
+      font-size: 1.05rem; color: var(--charcoal);
+      margin-bottom: 1.4rem;
+    }
+    .article-wrap p strong { color: var(--ember); }
+
+    h2.section-h {
+      font-size: 1.4rem; color: var(--forest-mid);
+      margin: 2.6rem 0 1.2rem; line-height: 1.35;
+    }
+
+    /* ── PULL QUOTE ── */
+    blockquote.pull {
+      margin: 2rem 0;
+      border-left: 3px solid var(--ember);
+      padding: 0.4rem 0 0.4rem 1.5rem;
+      font-size: 1.25rem; font-style: italic;
+      color: var(--forest); line-height: 1.5;
+    }
+
+    /* ── NOTE / ASIDE BOX ── */
+    .note-box {
+      background: var(--ember-pale); border: 1.5px solid rgba(200,82,26,0.25);
+      border-radius: 10px; padding: 1.6rem 1.8rem; margin: 2.2rem 0;
+    }
+    .note-box .nb-label {
+      font-family: 'Arial', sans-serif; font-size: 0.72rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--ember); margin-bottom: 0.7rem; display: block;
+    }
+    .note-box p { margin-bottom: 0; font-size: 0.98rem; color: var(--charcoal); }
+    .note-box p + p { margin-top: 0.8rem; }
+
+    /* ── NUMBERED PERSONA CARDS ── */
+    .num-card {
+      background: #fff; border: 1px solid rgba(45,74,45,0.15);
+      border-radius: 10px; padding: 1.5rem 1.6rem; margin-bottom: 1rem;
+      display: flex; gap: 1.1rem; align-items: flex-start;
+    }
+    .num-badge {
+      flex-shrink: 0; width: 2.3rem; height: 2.3rem; border-radius: 50%;
+      background: var(--forest); color: #fff;
+      display: flex; align-items: center; justify-content: center;
+      font-family: 'Arial', sans-serif; font-weight: bold; font-size: 0.95rem;
+    }
+    .num-body h4 { font-size: 1.02rem; color: var(--charcoal); margin-bottom: 0.4rem; }
+    .num-body p { font-size: 0.96rem; margin-bottom: 0; color: var(--stone); }
+
+    /* ── CHIP LIST ── */
+    .chip-list { display: flex; flex-wrap: wrap; gap: 0.5rem; margin: 1.2rem 0 1.8rem; }
+    .chip {
+      font-family: 'Arial', sans-serif; font-size: 0.8rem;
+      color: var(--stone); background: #fff;
+      border: 1px solid rgba(107,100,87,0.25);
+      border-radius: 100px; padding: 0.35rem 0.9rem;
+    }
+
+    /* ── CONTRAST / BOUNDARY BOX ── */
+    .contrast-box {
+      background: var(--forest); color: #fff;
+      border-radius: 12px; padding: 2rem; margin: 2.2rem 0 1rem;
+    }
+    .contrast-box .cx-icon { font-size: 1.6rem; margin-bottom: 0.7rem; }
+    .contrast-box h3 { font-size: 1.1rem; margin-bottom: 0.7rem; color: #fff; }
+    .contrast-box p {
+      color: rgba(255,255,255,0.75); font-family: 'Arial', sans-serif;
+      font-size: 0.92rem; margin-bottom: 0.7rem;
+    }
+    .contrast-box p:last-child { margin-bottom: 0; }
+
+    /* ── SERIES NAV ── */
+    .series-nav {
+      max-width: 700px; margin: 1rem auto 0; padding: 1.5rem 1.5rem 0;
+      border-top: 1px solid rgba(200,82,26,0.15);
+    }
+    .series-nav .series-label {
+      font-family: 'Arial', sans-serif; font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--stone); margin-bottom: 0.8rem; display: block;
+    }
+    .series-row { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .series-item {
+      font-family: 'Arial', sans-serif; font-size: 0.9rem;
+      color: var(--stone); padding: 0.7rem 0;
+    }
+    .series-item a { color: var(--ember); text-decoration: none; }
+    .series-item a:hover { text-decoration: underline; }
+    .series-item.next-disabled { opacity: 0.5; }
+
+    /* ── JOIN NUDGE ── */
+    .join-nudge {
+      max-width: 700px; margin: 2.5rem auto 4rem; padding: 0 1.5rem;
+    }
+    .join-nudge-inner {
+      background: var(--ink); border-radius: 12px;
+      padding: 2rem; text-align: center; color: #fff;
+    }
+    .join-nudge-inner p {
+      font-family: 'Arial', sans-serif; font-size: 0.92rem;
+      color: rgba(255,255,255,0.6); margin-bottom: 1.1rem;
+    }
+    .btn-join {
+      display: inline-block; background: var(--ember); color: #fff;
+      padding: 0.8rem 2rem; border-radius: 7px; text-decoration: none;
+      font-family: 'Arial', sans-serif; font-weight: bold; font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .btn-join:hover { background: var(--ember-light); }
+
+    /* ── FOOTER (matches index) ── */
+    footer {
+      background: var(--charcoal); color: rgba(255,255,255,0.55);
+      padding: 3rem 2rem; text-align: center;
+    }
+    footer .footer-logo {
+      font-size: 1.3rem; color: var(--ember-light);
+      margin-bottom: 0.5rem; display: block;
+    }
+    footer p {
+      font-family: 'Arial', sans-serif; font-size: 0.85rem;
+      color: rgba(255,255,255,0.45); margin-bottom: 0.4rem;
+    }
+    footer a { color: var(--ember-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links {
+      display: flex; gap: 1.5rem; justify-content: center;
+      margin-top: 1rem; flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-family: 'Arial', sans-serif; font-size: 0.82rem;
+      color: rgba(255,255,255,0.4);
+    }
+
+    @media (max-width: 560px) {
+      .article-hero { padding: 3.5rem 1.2rem 2.5rem; }
+      .series-row { flex-direction: column; gap: 0.3rem; }
+      .num-card { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html">🔥 Искра жизни</a>
+  <span class="sep">/</span>
+  <a href="blog.html">Блог</a>
+  <span class="sep">/</span>
+  <span class="current">Целевая аудитория</span>
+</header>
+
+<div class="article-hero">
+  <span class="hero-eyebrow">Сеть родительских клубов</span>
+  <h1>Часть 3. <em>Целевая аудитория</em></h1>
+  <div class="article-meta">
+    <span>9 мая 2025</span>
+    <span class="dot">·</span>
+    <span>01:28</span>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <p class="lede">
+    Ещё одна ремарка: диапазон родителей как движущей силы среды развития детей и взрослых —
+    настолько огромный. От тех, кто в полной отключке по причине деструктивной жизни, алкоголизма,
+    ещё чего-то. И отключки по причине виртуальности, успешного успеха, каких-то иллюзий — иллюзии
+    жизни, иллюзии развития.
+  </p>
+
+  <blockquote class="pull">
+    Шкала диапазона родителей — это контакт с реальной жизнью, контакт с собственным источником
+    внутри себя, со своей семечкой, со своей искрой божьей.
+  </blockquote>
+
+  <p>
+    Именно этой шкалой мы будем руководствоваться, когда обсуждаем, на кого, на какую аудиторию
+    рассчитан этот проект.
+  </p>
+
+  <div class="note-box">
+    <span class="nb-label">Не нужно спасать всех</span>
+    <p>
+      Это невозможно. Огромный диапазон отключённости от контакта с реальностью, с источником —
+      мы не про всех. Мы про тех, кто ищет ответы и готов вкладывать свой ресурс в самостоятельность
+      своих детей.
+    </p>
+  </div>
+
+  <h2 class="section-h">Четыре группы, которые откликаются первыми</h2>
+
+  <div class="num-card">
+    <div class="num-badge">1</div>
+    <div class="num-body">
+      <h4>Родители со старшими и младшими детьми</h4>
+      <p>
+        Те, у кого старшие дети — и с ними были сделаны ошибки, при этом появились младшие, а чёткого
+        понимания, что было не так и что надо было делать иначе, — не появилось. С младшими очень
+        хотят сделать по-другому и ищут информацию.
+      </p>
+    </div>
+  </div>
+
+  <div class="num-card">
+    <div class="num-badge">2</div>
+    <div class="num-body">
+      <h4>Семьи в тупиках сразу нескольких сфер жизни</h4>
+      <p>
+        Личная реализация, отношения между собой, хобби, финансы, друзья, смысл жизни, образование
+        детей, воспитание, отношения с собственными родителями, с социумом, на работе. Когда они
+        слышат про модель образования через жизненные задачи и сеть очагов адекватности — подвешенные
+        разрозненные элементы из разных сфер соединяются в целостную объёмную фигуру. Они реагируют
+        очень ярко.
+      </p>
+    </div>
+  </div>
+
+  <div class="num-card">
+    <div class="num-badge">3</div>
+    <div class="num-body">
+      <h4>Те, у кого дети уже выросли, но мыслят они глобально</h4>
+      <p>
+        Им «за Державу обидно», за человечество. У них есть разные ресурсы — время, компетенции,
+        опыт, мудрость, терпение, деньги, связи, активы — и желание вложить во что-то значимое,
+        устойчивое, не фантазийное, земное. Их движущая сила не родительская — дети уже выросли, но
+        подрастают внуки, и с ними хотят по-другому.
+      </p>
+    </div>
+  </div>
+
+  <div class="num-card">
+    <div class="num-badge">4</div>
+    <div class="num-body">
+      <h4>Предприниматели, владельцы заводов-пароходов</h4>
+      <p>
+        Бежали, достигали, растили, копили — а потом что-то случилось, и прежние смыслы обнулились:
+        разочарование и «разбитое корыто» по всем сферам — семья, дети, партнёры, друзья, образ жизни,
+        цели, смыслы. Даже наследство оставить некому, чтобы грамотно приумножили, а не разбазарили.
+        Они видят, куда своими собственными руками завели детей, и те не способны на ответственность
+        и человеческие отношения.
+      </p>
+    </div>
+  </div>
+
+  <h2 class="section-h">Ещё две категории</h2>
+
+  <p>
+    Также могут быть родители с не нормотипичными детьми. Это не история про инклюзивный проект в
+    чистом виде. Какой процент ненормотипичности присутствует в природе — в такой же примерно
+    пропорции он должен присутствовать и здесь, чтобы сохранялся баланс ядра, рассола, в который по
+    чуть-чуть добавляются разрозненные элементы и засаливаются едиными ценностями. Должен сохраняться
+    баланс рабочего рассола и его концентрации. Такие родители — тоже движущая сила.
+  </p>
+
+  <div class="note-box">
+    <span class="nb-label">Отдельно — чистые энтузиасты</span>
+    <p>
+      Те, кого не остановить с детства, кого ведёт мечта, идея, устремление, а не нужда. Такие люди
+      сами взваливают на себя работу с чужими детьми, их развитие, вдохновение, а родители и рады —
+      за любые деньги, лишь бы самим ничего не делать.
+    </p>
+    <p>
+      Гарантированно это тупиковая, не масштабируемая линия, потому что воспитывать должны родители
+      через собственное развитие и эволюцию. Макаренко на всех не хватит и не должно — не забывайте,
+      что Макаренко работал с сиротами. Любой талантливый педагог сразу вступает в конкуренцию с
+      родителями за любовь и уважение ребёнка, если специальные меры не предусматривать. Поэтому
+      энтузиасты будут катализаторами в развитии самих родителей и в наработке ими наставнических
+      навыков по отношению к собственным детям и детям друг друга.
+    </p>
+  </div>
+
+  <h2 class="section-h">Кого мы не трогаем</h2>
+
+  <div class="contrast-box">
+    <div class="cx-icon">🧭</div>
+    <h3>Финал резюме</h3>
+    <p>
+      Не нужно спасать всех. Не нужно трогать родителей и семьи, у которых всё хорошо и нет проблем
+      с образованием, или кто не готов нести ответственность за судьбу детей, вкладываться своим
+      ресурсом в самостоятельность своих детей.
+    </p>
+    <p>
+      Мы говорим только про тех, кто ищет ответы — например, кто на семейном образовании. Они уже
+      тратят время и деньги на какую-то альтернативу.
+    </p>
+  </div>
+
+  <p>
+    Это те, кто переехал в эко-поселение, не подумав о матрёшке иерархии живых систем, о сепарации с
+    10 лет собственных детей, о том, что нужна экосистема, микроэлементы, много-много других взрослых
+    и активностей в других местах, чтобы семечки их детей питались и жили по своему призванию. Всё
+    равно это невозможно реализовать только внутри эко-поселения. Они тоже там все подвешены по
+    вопросам образования, отношений с детьми и развития самого эко-поселения. Это и есть основная
+    целевая аудитория.
+  </p>
+
+  <h2 class="section-h">Связующая нить для разрозненных сообществ</h2>
+
+  <p>
+    Помимо них, просто отдельные многие люди хотят жить ближе к природе. Проблема в том, что для
+    этого нужен ресурс, нужно знание, как природными системами управляться. Этому нужно учиться, и
+    нужен ресурс, чтобы сразу организовать комфортную жизнь, а не выяснять отношения из-за режима
+    выживания. Ресурс для переезда на землю они могут получить объединением мелких групп в сообщества
+    покрупнее или в сеть.
+  </p>
+
+  <p>Почему так не происходит? Мы видим разрозненные маленькие группировки:</p>
+
+  <div class="chip-list">
+    <span class="chip">славяне</span>
+    <span class="chip">от Сварога</span>
+    <span class="chip">потомки Гипербореи</span>
+    <span class="chip">арии</span>
+    <span class="chip">вайшнавы</span>
+    <span class="chip">кришнаиты</span>
+    <span class="chip">православные</span>
+    <span class="chip">староверы</span>
+    <span class="chip">веганы</span>
+    <span class="chip">мясоеды</span>
+  </div>
+
+  <p>Они не сядут рядом.</p>
+
+  <blockquote class="pull">
+    Пока что видится только одна связующая нить — потребность в качественном образовании и воспитании
+    детей по всей линии школьного возраста. И у этой нити есть шанс соединить разрозненные сообщества,
+    их ресурсы, чтобы выращивать другой тип отношений и другой социум.
+  </blockquote>
+
+</div>
+
+<div class="series-nav">
+  <span class="series-label">Серия «Сеть родительских клубов»</span>
+  <div class="series-row">
+    <span class="series-item"><a href="zhivaya-sistema-2.html">← Часть 2. Уровни «матрёшки» живых систем</a></span>
+    <span class="series-item"><a href="zhivaya-sistema-4.html">Часть 4. Сеть очагов адекватности →</a></span>
+  </div>
+</div>
+
+<div class="join-nudge">
+  <div class="join-nudge-inner">
+    <p>Если этот взгляд на выращивание живой системы отзывается — присоединяйтесь к сообществу родителей, которые растят самостоятельность детей вместе.</p>
+    <a href="index.html#join" class="btn-join">Подать заявку на участие →</a>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-logo">🔥 Искра жизни</span>
+  <p>Родительская инициатива семейного экспериментального творчества</p>
+  <p>По вопросам участия: <a href="mailto:info@iskrazhizni.ru">info@iskrazhizni.ru</a></p>
+  <div class="footer-links">
+    <a href="index.html#about">О проекте</a>
+    <a href="index.html#principles">Принципы</a>
+    <a href="index.html#quiz">Опросники</a>
+    <a href="index.html#join">Присоединиться</a>
+  </div>
+  <p style="margin-top:2rem; font-size:0.75rem; opacity:0.3;">© 2026 Искра жизни</p>
+</footer>
+
+</body>
+</html>

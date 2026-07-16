@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Блог — Сеть родительских клубов — Искра жизни</title>
+  <style>
+    :root {
+      --ember:    #C8521A;
+      --ember-light: #E07040;
+      --ember-pale: #FAE8DC;
+      --forest:   #2D4A2D;
+      --forest-mid: #3D6B3D;
+      --cream:    #FDF8F3;
+      --stone:    #6B6457;
+      --charcoal: #2A2520;
+      --gold:     #C9900C;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--cream);
+      color: var(--charcoal);
+      line-height: 1.7;
+    }
+
+    /* ── NAV (matches index) ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(253,248,243,0.95);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(200,82,26,0.15);
+      padding: 0.9rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem;
+    }
+    .nav-logo { font-size: 1.2rem; font-weight: bold; color: var(--ember); letter-spacing: 0.02em; text-decoration: none; }
+    .nav-logo span { color: var(--forest); }
+    .nav-links { display: flex; gap: 1.6rem; list-style: none; }
+    .nav-links a { text-decoration: none; color: var(--stone); font-family: 'Arial', sans-serif; font-size: 0.9rem; letter-spacing: 0.03em; transition: color 0.2s; }
+    .nav-links a:hover, .nav-links a.current { color: var(--ember); }
+    .nav-cta { background: var(--ember); color: #fff; padding: 0.5rem 1.2rem; border-radius: 4px; text-decoration: none; font-family: 'Arial', sans-serif; font-size: 0.85rem; font-weight: bold; transition: background 0.2s; }
+    .nav-cta:hover { background: var(--ember-light); }
+
+    /* ── HERO ── */
+    .blog-hero {
+      background: linear-gradient(135deg, var(--forest) 0%, #1a3020 60%, #0f1f0f 100%);
+      padding: 4.5rem 2rem 3.5rem; text-align: center; position: relative; overflow: hidden;
+    }
+    .blog-hero::before {
+      content: ''; position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 60%, rgba(200,82,26,0.2) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .blog-hero span.eyebrow {
+      font-family: 'Arial', sans-serif; font-size: 0.78rem; text-transform: uppercase;
+      letter-spacing: 0.14em; color: rgba(255,255,255,0.5); margin-bottom: 1rem; display: block; position: relative;
+    }
+    .blog-hero h1 { font-size: clamp(2rem, 5vw, 2.8rem); color: #fff; margin-bottom: 1rem; position: relative; }
+    .blog-hero h1 em { color: var(--ember-light); font-style: normal; }
+    .blog-hero p { color: rgba(255,255,255,0.65); font-family: 'Arial', sans-serif; font-size: 0.98rem; max-width: 560px; margin: 0 auto; position: relative; }
+
+    /* ── POST LIST ── */
+    .post-wrap { max-width: 780px; margin: 0 auto; padding: 3.5rem 1.5rem 5rem; }
+    .post-card {
+      display: block; text-decoration: none; color: inherit;
+      background: #fff; border: 1px solid rgba(200,82,26,0.15); border-radius: 12px;
+      padding: 1.8rem 2rem; margin-bottom: 1.1rem;
+      transition: border-color 0.2s, transform 0.2s, box-shadow 0.2s;
+    }
+    .post-card:hover { border-color: var(--ember); transform: translateY(-2px); box-shadow: 0 8px 24px rgba(42,37,32,0.08); }
+    .post-tag {
+      font-family: 'Arial', sans-serif; font-size: 0.72rem; text-transform: uppercase;
+      letter-spacing: 0.12em; color: var(--ember); margin-bottom: 0.5rem; display: block;
+    }
+    .post-card h2 { font-size: 1.25rem; color: var(--charcoal); margin-bottom: 0.5rem; line-height: 1.35; }
+    .post-card p { font-family: 'Arial', sans-serif; font-size: 0.9rem; color: var(--stone); margin-bottom: 0.7rem; }
+    .post-date { font-family: 'Arial', sans-serif; font-size: 0.78rem; color: rgba(107,100,87,0.7); }
+
+    /* ── FOOTER (matches index) ── */
+    footer { background: var(--charcoal); color: rgba(255,255,255,0.55); padding: 3rem 2rem; text-align: center; }
+    footer .footer-logo { font-size: 1.3rem; color: var(--ember-light); margin-bottom: 0.5rem; display: block; }
+    footer p { font-family: 'Arial', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.45); margin-bottom: 0.4rem; }
+    footer a { color: var(--ember-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+    .footer-links a { font-family: 'Arial', sans-serif; font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+
+    @media (max-width: 640px) {
+      nav { padding: 0.8rem 1rem; }
+      .nav-links { display: none; }
+    }
+  </style>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="nav-logo">Искра <span>жизни</span></a>
+  <ul class="nav-links">
+    <li><a href="index.html#about">О проекте</a></li>
+    <li><a href="index.html#principles">Принципы</a></li>
+    <li><a href="blog.html" class="current">Блог</a></li>
+    <li><a href="index.html#quiz">Опросники</a></li>
+    <li><a href="index.html#join">Присоединиться</a></li>
+  </ul>
+  <a href="index.html#join" class="nav-cta">Подать заявку</a>
+</nav>
+
+<div class="blog-hero">
+  <span class="eyebrow">Сеть родительских клубов · Самостоятельность детей</span>
+  <h1>Как выращивается <em>живая система</em></h1>
+  <p>Серия статей о законах живых систем, среде развития детей и взрослых, и о том, как устроена сеть очагов адекватности.</p>
+</div>
+
+<div class="post-wrap">
+
+  <a href="zhivaya-sistema-1.html" class="post-card">
+    <span class="post-tag">Часть 1</span>
+    <h2>Выращиваем живую систему</h2>
+    <p>Почему становление личности — нелинейный процесс, и при чём тут почвенная экосистема и теория функциональных систем Анохина.</p>
+    <span class="post-date">8 мая 2025</span>
+  </a>
+
+  <a href="zhivaya-sistema-2.html" class="post-card">
+    <span class="post-tag">Часть 2</span>
+    <h2>Учитываем все уровни «матрёшки» живых систем</h2>
+    <p>Ребёнок — семечка с уже заданными параметрами и встроенными механизмами ориентировки и адаптации. Задача среды — дать им раскрыться.</p>
+    <span class="post-date">9 мая 2025</span>
+  </a>
+
+  <a href="zhivaya-sistema-3.html" class="post-card">
+    <span class="post-tag">Часть 3</span>
+    <h2>Целевая аудитория</h2>
+    <p>Кто откликается на идею первым — четыре группы родителей, и почему связующая нить для разрозненных сообществ — качественное образование детей.</p>
+    <span class="post-date">9 мая 2025</span>
+  </a>
+
+  <a href="zhivaya-sistema-4.html" class="post-card">
+    <span class="post-tag">Часть 4</span>
+    <h2>Сеть очагов адекватности</h2>
+    <p>Белые и синие точки на карте России, тройная роль природных экосистем и первые мастера сети.</p>
+    <span class="post-date">9 мая 2025</span>
+  </a>
+
+  <a href="zhivaya-sistema-5.html" class="post-card">
+    <span class="post-tag">Часть 5</span>
+    <h2>Кровеносная система проекта</h2>
+    <p>Почему главное в проекте — не методология, а искренняя дружба, симпатия и доверие между семьями.</p>
+    <span class="post-date">9 мая 2025</span>
+  </a>
+
+  <a href="zhivaya-sistema-6.html" class="post-card">
+    <span class="post-tag">Часть 6</span>
+    <h2>Минимум ресурса — максимум результата</h2>
+    <p>Почему неформальное образование избегает бюрократии — и открытые вопросы к системе, где успех измеряется баллами ЕГЭ.</p>
+    <span class="post-date">9 мая 2025</span>
+  </a>
+
+  <a href="zhivaya-sistema-7.html" class="post-card">
+    <span class="post-tag">Часть 7</span>
+    <h2>Методологическое ядро — реактор будущих инициатив</h2>
+    <p>Радиусы доверия и ответственности, объёмная картина реальности и социальный ресурс сети.</p>
+    <span class="post-date">9 мая 2025</span>
+  </a>
+
+  <a href="zhivaya-sistema-8.html" class="post-card">
+    <span class="post-tag">Часть 8</span>
+    <h2>Организационно-правовая форма</h2>
+    <p>Почему проект начинается с родительских клубов и постепенно вырастает в кооперативы с солидарной ответственностью.</p>
+    <span class="post-date">9 мая 2025</span>
+  </a>
+
+  <a href="zhivaya-sistema-9.html" class="post-card">
+    <span class="post-tag">Часть 9</span>
+    <h2>Внутренний компас и вечный двигатель — как работают</h2>
+    <p>Петля обратной связи, эксперимент Либета и метафора велосипеда: почему нельзя накачать мотивацию, не решая своих жизненных задач.</p>
+    <span class="post-date">13 мая 2025</span>
+  </a>
+
+</div>
+
+<footer>
+  <span class="footer-logo">🔥 Искра жизни</span>
+  <p>Родительская инициатива семейного экспериментального творчества</p>
+  <p>По вопросам участия: <a href="mailto:info@iskrazhizni.ru">info@iskrazhizni.ru</a></p>
+  <div class="footer-links">
+    <a href="index.html#about">О проекте</a>
+    <a href="index.html#principles">Принципы</a>
+    <a href="index.html#quiz">Опросники</a>
+    <a href="index.html#join">Присоединиться</a>
+  </div>
+  <p style="margin-top:2rem; font-size:0.75rem; opacity:0.3;">© 2026 Искра жизни</p>
+</footer>
+
+</body>
+</html>

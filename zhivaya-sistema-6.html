@@ -1,0 +1,243 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Часть 6. Минимум ресурса — максимум результата — Искра жизни</title>
+  <style>
+    :root {
+      --ember:      #C8521A;
+      --ember-light:#E07040;
+      --ember-pale: #FAE8DC;
+      --forest:     #2D4A2D;
+      --forest-mid: #3D6B3D;
+      --cream:      #FDF8F3;
+      --stone:      #6B6457;
+      --charcoal:   #2A2520;
+      --ink:        #16120E;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Georgia', serif; background: var(--cream); color: var(--charcoal); line-height: 1.7; }
+
+    .site-header { background: var(--ink); padding: 1rem 2rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .site-header a { color: rgba(255,255,255,0.55); font-family:'Arial',sans-serif; font-size:0.85rem; text-decoration:none; }
+    .site-header a:hover { color: #fff; }
+    .site-header .sep { color: rgba(255,255,255,0.2); }
+    .site-header .current { color: rgba(255,255,255,0.4); font-family:'Arial',sans-serif; font-size:0.85rem; }
+
+    .article-hero { background: var(--ink); padding: 4.5rem 2rem 3.5rem; text-align: center; }
+    .hero-eyebrow { font-family: 'Arial', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(255,255,255,0.35); margin-bottom: 1.2rem; display: block; }
+    .article-hero h1 { font-size: clamp(1.8rem, 4.4vw, 2.85rem); color: #fff; line-height: 1.28; margin-bottom: 1.2rem; max-width: 760px; margin-left: auto; margin-right: auto; letter-spacing: -0.01em; }
+    .article-hero h1 em { color: var(--ember-light); font-style: normal; }
+    .article-meta { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; font-family: 'Arial', sans-serif; font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+    .article-meta .dot { color: rgba(255,255,255,0.2); }
+
+    .article-wrap { max-width: 700px; margin: 0 auto; padding: 3.2rem 1.5rem 2rem; }
+    .lede { font-size: 1.12rem; color: var(--charcoal); margin-bottom: 1.5rem; }
+    .article-wrap p { font-size: 1.05rem; color: var(--charcoal); margin-bottom: 1.4rem; }
+    .article-wrap p strong { color: var(--ember); }
+    .article-wrap a.inline-link { color: var(--ember); }
+    h2.section-h { font-size: 1.4rem; color: var(--forest-mid); margin: 2.6rem 0 1.2rem; line-height: 1.35; }
+
+    /* ── SUMMARY CARD ── */
+    .summary-card { background: #fff; border: 1.5px solid rgba(45,74,45,0.18); border-radius: 10px; padding: 1.6rem 1.8rem; margin-bottom: 2.2rem; }
+    .summary-card .sc-label { font-family: 'Arial', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--forest-mid); margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.4rem; }
+    .summary-card p { font-family: 'Arial', sans-serif; font-size: 0.93rem; color: var(--stone); margin-bottom: 0; line-height: 1.6; }
+
+    blockquote.pull { margin: 2rem 0; border-left: 3px solid var(--ember); padding: 0.4rem 0 0.4rem 1.5rem; font-size: 1.25rem; font-style: italic; color: var(--forest); line-height: 1.5; }
+
+    /* ── CASE BOX ── */
+    .case-box { background: rgba(45,74,45,0.06); border: 1.5px solid rgba(45,74,45,0.2); border-radius: 10px; padding: 1.6rem 1.8rem; margin: 2.2rem 0; }
+    .case-box .cb-label { font-family: 'Arial', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--forest-mid); margin-bottom: 0.7rem; display: block; }
+    .case-box p { margin-bottom: 0; font-size: 0.98rem; color: var(--charcoal); }
+    .case-box p + p { margin-top: 0.8rem; }
+    .case-box .cb-stat { font-family:'Arial',sans-serif; font-weight:bold; font-size:1.8rem; color:var(--forest); margin: 0.4rem 0; }
+
+    /* ── NOTE / ASIDE BOX ── */
+    .note-box { background: var(--ember-pale); border: 1.5px solid rgba(200,82,26,0.25); border-radius: 10px; padding: 1.6rem 1.8rem; margin: 2.2rem 0; }
+    .note-box .nb-label { font-family: 'Arial', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ember); margin-bottom: 0.7rem; display: block; }
+    .note-box p { margin-bottom: 0; font-size: 0.98rem; color: var(--charcoal); }
+    .note-box p + p { margin-top: 0.8rem; }
+
+    /* ── OPEN QUESTIONS ── */
+    .q-box { background: var(--ink); border-radius: 12px; padding: 2rem; margin: 2.2rem 0 1rem; }
+    .q-box .qb-label { font-family:'Arial',sans-serif; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.12em; color:rgba(255,255,255,0.35); margin-bottom:1rem; display:block; }
+    .q-list { list-style:none; padding:0; }
+    .q-list li { font-family:'Arial',sans-serif; font-size:0.95rem; color:rgba(255,255,255,0.85); padding:0.6rem 0 0.6rem 1.6rem; border-bottom:1px solid rgba(255,255,255,0.08); position:relative; line-height:1.55; }
+    .q-list li:last-child { border-bottom:none; }
+    .q-list li::before { content:'?'; position:absolute; left:0; top:0.6rem; color:var(--ember-light); font-weight:bold; }
+
+    /* ── SERIES NAV ── */
+    .series-nav { max-width: 700px; margin: 1rem auto 0; padding: 1.5rem 1.5rem 0; border-top: 1px solid rgba(200,82,26,0.15); }
+    .series-nav .series-label { font-family: 'Arial', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--stone); margin-bottom: 0.8rem; display: block; }
+    .series-row { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .series-item { font-family: 'Arial', sans-serif; font-size: 0.9rem; color: var(--stone); padding: 0.7rem 0; }
+    .series-item a { color: var(--ember); text-decoration: none; }
+    .series-item a:hover { text-decoration: underline; }
+    .series-item.next-disabled { opacity: 0.5; }
+
+    .join-nudge { max-width: 700px; margin: 2.5rem auto 4rem; padding: 0 1.5rem; }
+    .join-nudge-inner { background: var(--ink); border-radius: 12px; padding: 2rem; text-align: center; color: #fff; }
+    .join-nudge-inner p { font-family: 'Arial', sans-serif; font-size: 0.92rem; color: rgba(255,255,255,0.6); margin-bottom: 1.1rem; }
+    .btn-join { display: inline-block; background: var(--ember); color: #fff; padding: 0.8rem 2rem; border-radius: 7px; text-decoration: none; font-family: 'Arial', sans-serif; font-weight: bold; font-size: 0.95rem; transition: background 0.2s; }
+    .btn-join:hover { background: var(--ember-light); }
+
+    footer { background: var(--charcoal); color: rgba(255,255,255,0.55); padding: 3rem 2rem; text-align: center; }
+    footer .footer-logo { font-size: 1.3rem; color: var(--ember-light); margin-bottom: 0.5rem; display: block; }
+    footer p { font-family: 'Arial', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.45); margin-bottom: 0.4rem; }
+    footer a { color: var(--ember-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+    .footer-links a { font-family: 'Arial', sans-serif; font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+
+    @media (max-width: 560px) {
+      .article-hero { padding: 3.5rem 1.2rem 2.5rem; }
+      .series-row { flex-direction: column; gap: 0.3rem; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html">🔥 Искра жизни</a>
+  <span class="sep">/</span>
+  <a href="blog.html">Блог</a>
+  <span class="sep">/</span>
+  <span class="current">Минимум ресурса — максимум результата</span>
+</header>
+
+<div class="article-hero">
+  <span class="hero-eyebrow">Сеть родительских клубов</span>
+  <h1>Часть 6. <em>Минимум ресурса — максимум результата</em></h1>
+  <div class="article-meta">
+    <span>9 мая 2025</span>
+    <span class="dot">·</span>
+    <span>05:44</span>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <div class="summary-card">
+    <span class="sc-label">📝 Коротко о главном</span>
+    <p>
+      Неформальное образование требует минимума ресурсов и избегает бюрократии. В отличие от
+      традиционных моделей, такой подход фокусируется на живых задачах, свободе и инициативе детей, а
+      также на участии родителей. Важно создавать среду, где ребёнок развивает жизненные компетенции,
+      а не просто усваивает знания. Критика систем вроде школы Щетинина — за отрыв от жизненных
+      процессов, превращающий обучение в перечень обязанностей. В заключение — открытый вопрос:
+      гарантирует ли успех в школе и поступление в престижные вузы счастье и реализацию в жизни?
+    </p>
+  </div>
+
+  <p class="lede">
+    В таком неформальном образовании не тратятся колоссальные ресурсы на бюрократию и формализм,
+    которыми обвешаны все образовательные проекты — в том числе альтернативные, как только они
+    оказывают услугу: лицензии, санстанции, пожарные, обучение наставников и учителей, контроль
+    качества. Тем более что это не питает нашу семечку, а наоборот, уводит от своей сути и природы, а
+    ресурс тянет колоссальный.
+  </p>
+
+  <h2 class="section-h">Кейс: образование съедает 30% ресурса общества</h2>
+
+  <div class="case-box">
+    <span class="cb-label">История из рабочей группы системщиков-аналитиков</span>
+    <p>
+      Судьба свела с рабочей группой, которая с 2014 года пыталась спроектировать новую модель
+      экономики России и мира — графики, таблицы, диаграммы, меняли параметры, смотрели результаты. И
+      уткнулись в систему образования.
+    </p>
+    <div class="cb-stat">30%</div>
+    <p>
+      Именно столько ресурса нового общества «съедала» модель образования — потому что они взяли
+      нынешнюю модель и просто вместо классов на 30 человек сделали классы на 10 человек. В три раза
+      возросло количество учителей, которых нужно готовить и которым нужно платить зарплаты и
+      проверять качество. Увеличилось количество школ, которые нужно строить, оборудовать, содержать.
+      Команда билась над этой задачей несколько лет.
+    </p>
+    <p>
+      А когда прозвучала модель образования через жизненные задачи при инициативе и ответственности
+      родителей — всё сошлось. При этом они вообще так не думали, это сюжет из совершенно другой
+      логики.
+    </p>
+  </div>
+
+  <h2 class="section-h">Неформальное — не значит любительское</h2>
+
+  <p>
+    Это неформальное образование, но с высоким академическим качеством. Потому что есть
+    методологическое ядро с опорой на передовые науки. По предыдущим частям это не очевидно, но оно
+    точно есть. И индивидуальные траектории, и эффективные групповые процессы. У Макаренко, Щетинина,
+    Рукавишникова многое было выстроено по законам живых систем (кроме семьи). Ключевое — созидание
+    среды жизни детьми, решение ими жизненных задач. Если это изъять — не будет такой трансформации и
+    становления личности, чтобы на выходе во взрослую жизнь у человека на полную катушку работали
+    <a class="inline-link" href="zhivaya-sistema-9.html">внутренние механизмы ориентировки и адаптации (см. Часть 9)</a>.
+  </p>
+
+  <div class="note-box">
+    <span class="nb-label">Важнейший момент</span>
+    <p>
+      Макаренко, Щетинин, Рукавишников не имели дело с семьями. Если в чистом виде их опыт применять —
+      сделаем детей сиротами при живых родителях. А надо наоборот — помогать родителям обретать цели
+      детства своих детей, брать руль в свои руки на фоне происходящего с образованием и воспитанием.
+    </p>
+  </div>
+
+  <h2 class="section-h">Пример: во что превратилась школа Щетинина</h2>
+
+  <p>
+    После опечатки корпусов школы Щетинина одни из его учеников арендуют санаторий, где всё готовое:
+    дети только учатся. Они ничего не строят, не декорируют стены, не шьют костюмы для гастролей, не
+    растят огород — и на этом образование по-Щетинину, на мой субъективный взгляд, закончилось.
+    Лучшие дети со всей России приезжают в 12 лет (а это уже плод родительских трудов), и дальше их
+    гоняют по школьным предметам с утра до вечера, совмещая с хореографией и спортом. Да, они
+    поступают в хорошие вузы, но там изначально статистика качества детей, поступающих в этот
+    санаторий, — выше среднего.
+  </p>
+
+  <div class="q-box">
+    <span class="qb-label">Открытые вопросы</span>
+    <ul class="q-list">
+      <li>Отличные оценки в школе, высокие баллы ЕГЭ, выигранные олимпиады, поступление в престижные вузы — гарантируют ли они, что дети будут реализованы и счастливы в жизни?</li>
+      <li>Смогут ли они эффективно сориентироваться в неопределённости и катаклизмах?</li>
+      <li>Смогут ли строить здоровые отношения, без выгорания выживать в хищнических системах?</li>
+      <li>Смогут ли вовремя обретать достаточный для качественной жизни ресурс, создавать семьи и растить детей?</li>
+      <li>Будут ли субъектны в государственных и корпоративных механизмах?</li>
+    </ul>
+  </div>
+
+  <p>Это открытые вопросы для обдумывания каждым родителем и педагогическим коллективом.</p>
+
+</div>
+
+<div class="series-nav">
+  <span class="series-label">Серия «Сеть родительских клубов»</span>
+  <div class="series-row">
+    <span class="series-item"><a href="zhivaya-sistema-5.html">← Часть 5. Кровеносная система проекта</a></span>
+    <span class="series-item"><a href="zhivaya-sistema-7.html">Часть 7. Методологическое ядро →</a></span>
+  </div>
+</div>
+
+<div class="join-nudge">
+  <div class="join-nudge-inner">
+    <p>Если этот взгляд на выращивание живой системы отзывается — присоединяйтесь к сообществу родителей, которые растят самостоятельность детей вместе.</p>
+    <a href="index.html#join" class="btn-join">Подать заявку на участие →</a>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-logo">🔥 Искра жизни</span>
+  <p>Родительская инициатива семейного экспериментального творчества</p>
+  <p>По вопросам участия: <a href="mailto:info@iskrazhizni.ru">info@iskrazhizni.ru</a></p>
+  <div class="footer-links">
+    <a href="index.html#about">О проекте</a>
+    <a href="index.html#principles">Принципы</a>
+    <a href="index.html#quiz">Опросники</a>
+    <a href="index.html#join">Присоединиться</a>
+  </div>
+  <p style="margin-top:2rem; font-size:0.75rem; opacity:0.3;">© 2026 Искра жизни</p>
+</footer>
+
+</body>
+</html>

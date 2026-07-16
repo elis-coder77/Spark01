@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Часть 5. Кровеносная система проекта — Искра жизни</title>
+  <style>
+    :root {
+      --ember:      #C8521A;
+      --ember-light:#E07040;
+      --ember-pale: #FAE8DC;
+      --forest:     #2D4A2D;
+      --forest-mid: #3D6B3D;
+      --cream:      #FDF8F3;
+      --stone:      #6B6457;
+      --charcoal:   #2A2520;
+      --ink:        #16120E;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Georgia', serif; background: var(--cream); color: var(--charcoal); line-height: 1.7; }
+
+    .site-header { background: var(--ink); padding: 1rem 2rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .site-header a { color: rgba(255,255,255,0.55); font-family:'Arial',sans-serif; font-size:0.85rem; text-decoration:none; }
+    .site-header a:hover { color: #fff; }
+    .site-header .sep { color: rgba(255,255,255,0.2); }
+    .site-header .current { color: rgba(255,255,255,0.4); font-family:'Arial',sans-serif; font-size:0.85rem; }
+
+    .article-hero { background: var(--ink); padding: 4.5rem 2rem 3.5rem; text-align: center; }
+    .hero-eyebrow { font-family: 'Arial', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(255,255,255,0.35); margin-bottom: 1.2rem; display: block; }
+    .article-hero h1 { font-size: clamp(1.9rem, 4.6vw, 3rem); color: #fff; line-height: 1.28; margin-bottom: 1.2rem; max-width: 760px; margin-left: auto; margin-right: auto; letter-spacing: -0.01em; }
+    .article-hero h1 em { color: var(--ember-light); font-style: normal; }
+    .article-meta { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; font-family: 'Arial', sans-serif; font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+    .article-meta .dot { color: rgba(255,255,255,0.2); }
+
+    .article-wrap { max-width: 700px; margin: 0 auto; padding: 3.2rem 1.5rem 2rem; }
+    .lede { font-size: 1.12rem; color: var(--charcoal); margin-bottom: 1.5rem; }
+    .article-wrap p { font-size: 1.05rem; color: var(--charcoal); margin-bottom: 1.4rem; }
+    .article-wrap p strong { color: var(--ember); }
+    h2.section-h { font-size: 1.4rem; color: var(--forest-mid); margin: 2.6rem 0 1.2rem; line-height: 1.35; }
+
+    blockquote.pull { margin: 2rem 0; border-left: 3px solid var(--ember); padding: 0.4rem 0 0.4rem 1.5rem; font-size: 1.25rem; font-style: italic; color: var(--forest); line-height: 1.5; }
+
+    /* ── DIALOGUE ── */
+    .dialogue { background:#fff; border:1px solid rgba(45,74,45,0.15); border-radius:10px; padding:1.6rem 1.8rem; margin:2rem 0; }
+    .d-line { margin-bottom:0.9rem; font-family:'Arial',sans-serif; font-size:0.94rem; line-height:1.55; }
+    .d-line:last-child { margin-bottom:0; }
+    .d-speaker { font-weight:bold; color:var(--forest-mid); margin-right:0.4rem; }
+    .d-line.us .d-speaker { color:var(--ember); }
+
+    /* ── COMPARE ── */
+    .compare-grid { display:grid; grid-template-columns:1fr 1fr; gap:1rem; margin:2rem 0; align-items:stretch; }
+    .compare-card { border-radius:10px; padding:1.4rem 1.5rem; }
+    .compare-card.old { background:var(--ember-pale); border:1.5px solid rgba(200,82,26,0.25); }
+    .compare-card.new { background:rgba(45,74,45,0.07); border:1.5px solid rgba(45,74,45,0.25); }
+    .compare-card .cc-label { font-family:'Arial',sans-serif; font-size:0.72rem; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.6rem; display:block; }
+    .compare-card.old .cc-label { color:var(--ember); }
+    .compare-card.new .cc-label { color:var(--forest-mid); }
+    .compare-card p { font-family:'Arial',sans-serif; font-size:0.92rem; margin-bottom:0; color:var(--charcoal); }
+    .compare-arrow { text-align:center; font-family:'Arial',sans-serif; color:var(--stone); font-size:0.85rem; margin: -0.5rem 0 1.5rem; }
+
+    /* ── NOTE / ASIDE BOX ── */
+    .note-box { background: var(--ember-pale); border: 1.5px solid rgba(200,82,26,0.25); border-radius: 10px; padding: 1.6rem 1.8rem; margin: 2.2rem 0; }
+    .note-box .nb-label { font-family: 'Arial', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--ember); margin-bottom: 0.7rem; display: block; }
+    .note-box p { margin-bottom: 0; font-size: 0.98rem; color: var(--charcoal); }
+    .note-box p + p { margin-top: 0.8rem; }
+
+    /* ── PILLAR CALLOUT ── */
+    .pillar-callout { background: var(--forest); color: #fff; border-radius: 12px; padding: 2rem; margin: 2.2rem 0 1rem; }
+    .pillar-callout .pc-icon { font-size: 1.8rem; margin-bottom: 0.7rem; }
+    .pillar-callout h3 { font-size: 1.15rem; margin-bottom: 0.7rem; color: #fff; }
+    .pillar-callout p { color: rgba(255,255,255,0.75); font-family: 'Arial', sans-serif; font-size: 0.92rem; margin-bottom: 0.7rem; }
+    .pillar-callout p:last-child { margin-bottom: 0; }
+
+    /* ── SERIES NAV ── */
+    .series-nav { max-width: 700px; margin: 1rem auto 0; padding: 1.5rem 1.5rem 0; border-top: 1px solid rgba(200,82,26,0.15); }
+    .series-nav .series-label { font-family: 'Arial', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--stone); margin-bottom: 0.8rem; display: block; }
+    .series-row { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .series-item { font-family: 'Arial', sans-serif; font-size: 0.9rem; color: var(--stone); padding: 0.7rem 0; }
+    .series-item a { color: var(--ember); text-decoration: none; }
+    .series-item a:hover { text-decoration: underline; }
+    .series-item.next-disabled { opacity: 0.5; }
+
+    .join-nudge { max-width: 700px; margin: 2.5rem auto 4rem; padding: 0 1.5rem; }
+    .join-nudge-inner { background: var(--ink); border-radius: 12px; padding: 2rem; text-align: center; color: #fff; }
+    .join-nudge-inner p { font-family: 'Arial', sans-serif; font-size: 0.92rem; color: rgba(255,255,255,0.6); margin-bottom: 1.1rem; }
+    .btn-join { display: inline-block; background: var(--ember); color: #fff; padding: 0.8rem 2rem; border-radius: 7px; text-decoration: none; font-family: 'Arial', sans-serif; font-weight: bold; font-size: 0.95rem; transition: background 0.2s; }
+    .btn-join:hover { background: var(--ember-light); }
+
+    footer { background: var(--charcoal); color: rgba(255,255,255,0.55); padding: 3rem 2rem; text-align: center; }
+    footer .footer-logo { font-size: 1.3rem; color: var(--ember-light); margin-bottom: 0.5rem; display: block; }
+    footer p { font-family: 'Arial', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.45); margin-bottom: 0.4rem; }
+    footer a { color: var(--ember-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+    .footer-links a { font-family: 'Arial', sans-serif; font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+
+    @media (max-width: 560px) {
+      .article-hero { padding: 3.5rem 1.2rem 2.5rem; }
+      .series-row { flex-direction: column; gap: 0.3rem; }
+      .compare-grid { grid-template-columns: 1fr; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html">🔥 Искра жизни</a>
+  <span class="sep">/</span>
+  <a href="blog.html">Блог</a>
+  <span class="sep">/</span>
+  <span class="current">Кровеносная система проекта</span>
+</header>
+
+<div class="article-hero">
+  <span class="hero-eyebrow">Сеть родительских клубов</span>
+  <h1>Часть 5. <em>Кровеносная система проекта</em></h1>
+  <div class="article-meta">
+    <span>9 мая 2025</span>
+    <span class="dot">·</span>
+    <span>04:39</span>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <p class="lede">
+    Многие родители задаются вопросом: как это реализовать? Ведь идея-то хорошая. Действительно, у
+    родителей есть компетенция, они эксперты каждый в своём, и это огромный ресурс, который сейчас
+    вынесен за скобки в социуме.
+  </p>
+
+  <p>Поясню разницу алгоритмов на эпизоде — самый обычный родитель, утром на работу, вечером домой, ребёнок в школе, каждый своими делами занят.</p>
+
+  <div class="dialogue">
+    <div class="d-line us"><span class="d-speaker">Мы:</span> Ты в чём эксперт?</div>
+    <div class="d-line"><span class="d-speaker">Родитель:</span> Юрист.</div>
+    <div class="d-line us"><span class="d-speaker">Мы:</span> Сделаешь что-нибудь для подростков?</div>
+    <div class="d-line"><span class="d-speaker">Родитель:</span> <em>(по лицу видно — нет)</em> Какое-то ответвление от основной работы, на работе и так пожары горят. Какие подростки? Ну нет.</div>
+    <div class="d-line us"><span class="d-speaker">Мы:</span> Хорошо. А хочешь для своего подростка окружение из 15–20 взрослых спецов из разных сфер, которым бы он доверял — и которым бы ты доверял?</div>
+    <div class="d-line"><span class="d-speaker">Родитель:</span> Да, конечно, что надо делать?</div>
+  </div>
+
+  <p>
+    Речь про этап сепарации и подвергания сомнению родительских моделей и авторитета — с 10 лет.
+  </p>
+
+  <p>
+    И мы родителю говорим: «Хорошо, тогда 5–10% своего времени удели на наставничество другого
+    ребёнка. Ничего специального делать не нужно, никаких программ и курсов. Дай постоять рядом. При
+    условии, что этот ребёнок уже будет заинтересован в этой сфере, и он уже будет внимательным и
+    сконцентрированным». Чаще всего ответ — «да, конечно, не проблема». Вот разница и мост между тем,
+    как сейчас обстоят дела, и тем, куда мы движемся на переходном этапе.
+  </p>
+
+  <h2 class="section-h">Условие: взаимные усилия родителей</h2>
+
+  <p>
+    Только важный момент — это очень красиво и воодушевляюще звучит, но возможно только при условии
+    взаимной дружбы и симпатии одного и другого человека, независимо от возраста. Невозможно заставить
+    другого родителя-наставника, если ребёнок недоговороспособный, с крошечным объёмом внимания
+    из-за гаджетов. Родители не делали свою домашнюю работу все предыдущие годы — никто не захочет с
+    таким ребёнком иметь дело.
+  </p>
+
+  <p>
+    Это потребует определённых взаимных усилий, ответственности и труда родителей по трансформации
+    себя в первую очередь. Ведь что-то же я делал не так, раз упустил формирование важного фундамента.
+    Я хочу для своего ребёнка такое окружение — и я вынужден приложить усилия над собой и своим
+    ребёнком, чтобы его кто-то взял, и чтобы я захотел кого-то взять. И так сделать должен будет
+    каждый, кто хочет круг взаимного наставничества и доверия для своих детей.
+  </p>
+
+  <blockquote class="pull">
+    За все 6 лет, что я занимаюсь проектом, это самое свежее открытие и удивление — приоритет
+    оказался не в методологии, форматах, учителях. Самое главное — кровеносная система проекта — это
+    искренняя дружба, симпатия, доверие!
+  </blockquote>
+
+  <h2 class="section-h">Безопасность через ближайшее рукопожатие</h2>
+
+  <p>
+    Это и есть новая социальность — другой тип отношений, другое образование, возможное только если
+    между семьями действительно есть доверие. В этой точке решается и вопрос безопасности, из-за
+    которого образовательные услуги отягощаются дополнительными расходами, делающими этот вид бизнеса
+    либо нерентабельным, либо сверхдорогим.
+  </p>
+
+  <div class="note-box">
+    <span class="nb-label">Спойлер</span>
+    <p>Это и не должно быть бизнесом в том виде, в котором это сейчас существует.</p>
+  </div>
+
+  <p>
+    Такое неформальное взаимодействие возможно при степени доверия, как если бы я сына отправила со
+    своим братом строить дом. Я не спрашиваю брата «вы инструктаж по ТБ провели, защитные очки
+    надели, ограждение на пилу поставили?» Я принимаю риск и ответственность на себя, я понимаю, с
+    кем мой ребёнок едет. Это мой выбор, мои договорённости. Точно так же, когда ко мне приезжает
+    чей-то ребёнок, — это риск и договорённость того родителя, и это наше с ним взаимодействие,
+    степень доверия и открытости, обретённые ранее в каких-то совместных делах. Только ближайшее
+    рукопожатие. Такая цепочка.
+  </p>
+
+  <p>
+    И это невозможно гарантировать, спроектировать и продать — что конкретно на выходе получат эти
+    дети и взрослые. Вот в чём загвоздка. Но чуйкой каждый живой родитель ощущает искру и здравый
+    смысл в этой затее, что-то зовёт туда. Глубинная, настоящая часть нас, наша семечка-сердцевина
+    предчувствует живые эпизоды и живое творчество — как наша искра разгорается и запускает
+    внутренний компас без всяких ретритов и тренингов.
+  </p>
+
+  <h2 class="section-h">От своего коня — к общему биотопу</h2>
+
+  <p>
+    Нам важен опыт и инструменты выращивания социальных организмов, чтобы стать слаженной экосистемой,
+    где каждый на своём месте, никто не перетягивает одеяло, где каждый реализует свою природу и
+    служит целому.
+  </p>
+
+  <div class="compare-grid">
+    <div class="compare-card old">
+      <span class="cc-label">Было</span>
+      <p>«Мне нужно накормить своего коня, или мне нужно вырастить своего ребёнка».</p>
+    </div>
+    <div class="compare-card new">
+      <span class="cc-label">Стало</span>
+      <p>«Мне нужно вырастить биотоп, который накормит всех — в том числе моего ребёнка».</p>
+    </div>
+  </div>
+
+  <p>
+    Такая разница. И такие инструменты есть.
+  </p>
+
+  <p>
+    Мы, как родители, взаимно заинтересованы друг в друге. Мёртвые базы данных не работают, когда
+    собираются таблицы компетенций родителей и интересов детей. Нужны реальные мамы и папы, семьи с
+    их реальными потребностями по поводу детей, их контекст жизни — город, район — и от них плясать.
+    В общий котёл родители свои экспертности закидывают, и всё работает только на ближайшее
+    рукопожатие.
+  </p>
+
+  <div class="pillar-callout">
+    <div class="pc-icon">🤝</div>
+    <h3>Не упускайте возможностей</h3>
+    <p>
+      Ко всем поездкам — к Ринальдо, к Элине, к Алексею Лынову, к Наталье Манежевой — относитесь как к
+      поводам для встреч, для возможной гипотетической дружбы, симпатии и доверия. Никто не может
+      гарантировать, но по-другому они не возникнут.
+    </p>
+    <p>
+      Для этого нужно ехать, друг друга в гости звать, придумывать поводы. В идеале — совместное
+      дело. И тогда эта сеть будет работать, с качественным образованием и воспитанием на выходе — не
+      сама по себе, а выстроенная в определённой логике с фундаментом из законов живых систем.
+    </p>
+  </div>
+
+</div>
+
+<div class="series-nav">
+  <span class="series-label">Серия «Сеть родительских клубов»</span>
+  <div class="series-row">
+    <span class="series-item"><a href="zhivaya-sistema-4.html">← Часть 4. Сеть очагов адекватности</a></span>
+    <span class="series-item"><a href="zhivaya-sistema-6.html">Часть 6. Минимум ресурса — максимум результата →</a></span>
+  </div>
+</div>
+
+<div class="join-nudge">
+  <div class="join-nudge-inner">
+    <p>Если этот взгляд на выращивание живой системы отзывается — присоединяйтесь к сообществу родителей, которые растят самостоятельность детей вместе.</p>
+    <a href="index.html#join" class="btn-join">Подать заявку на участие →</a>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-logo">🔥 Искра жизни</span>
+  <p>Родительская инициатива семейного экспериментального творчества</p>
+  <p>По вопросам участия: <a href="mailto:info@iskrazhizni.ru">info@iskrazhizni.ru</a></p>
+  <div class="footer-links">
+    <a href="index.html#about">О проекте</a>
+    <a href="index.html#principles">Принципы</a>
+    <a href="index.html#quiz">Опросники</a>
+    <a href="index.html#join">Присоединиться</a>
+  </div>
+  <p style="margin-top:2rem; font-size:0.75rem; opacity:0.3;">© 2026 Искра жизни</p>
+</footer>
+
+</body>
+</html>

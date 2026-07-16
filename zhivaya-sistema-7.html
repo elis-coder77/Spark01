@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Часть 7. Методологическое ядро — реактор будущих инициатив — Искра жизни</title>
+  <style>
+    :root {
+      --ember:      #C8521A;
+      --ember-light:#E07040;
+      --ember-pale: #FAE8DC;
+      --forest:     #2D4A2D;
+      --forest-mid: #3D6B3D;
+      --cream:      #FDF8F3;
+      --stone:      #6B6457;
+      --charcoal:   #2A2520;
+      --ink:        #16120E;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'Georgia', serif; background: var(--cream); color: var(--charcoal); line-height: 1.7; }
+
+    .site-header { background: var(--ink); padding: 1rem 2rem; display: flex; align-items: center; gap: 0.6rem; flex-wrap: wrap; }
+    .site-header a { color: rgba(255,255,255,0.55); font-family:'Arial',sans-serif; font-size:0.85rem; text-decoration:none; }
+    .site-header a:hover { color: #fff; }
+    .site-header .sep { color: rgba(255,255,255,0.2); }
+    .site-header .current { color: rgba(255,255,255,0.4); font-family:'Arial',sans-serif; font-size:0.85rem; }
+
+    .article-hero { background: var(--ink); padding: 4.5rem 2rem 3.5rem; text-align: center; }
+    .hero-eyebrow { font-family: 'Arial', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.16em; color: rgba(255,255,255,0.35); margin-bottom: 1.2rem; display: block; }
+    .article-hero h1 { font-size: clamp(1.7rem, 4.2vw, 2.7rem); color: #fff; line-height: 1.28; margin-bottom: 1.2rem; max-width: 760px; margin-left: auto; margin-right: auto; letter-spacing: -0.01em; }
+    .article-hero h1 em { color: var(--ember-light); font-style: normal; }
+    .article-meta { display: flex; gap: 1.2rem; justify-content: center; flex-wrap: wrap; font-family: 'Arial', sans-serif; font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+    .article-meta .dot { color: rgba(255,255,255,0.2); }
+
+    .article-wrap { max-width: 700px; margin: 0 auto; padding: 3.2rem 1.5rem 2rem; }
+    .lede { font-size: 1.12rem; color: var(--charcoal); margin-bottom: 1.5rem; }
+    .article-wrap p { font-size: 1.05rem; color: var(--charcoal); margin-bottom: 1.4rem; }
+    .article-wrap p strong { color: var(--ember); }
+    .article-wrap a.inline-link { color: var(--ember); }
+    h2.section-h { font-size: 1.4rem; color: var(--forest-mid); margin: 2.6rem 0 1.2rem; line-height: 1.35; }
+
+    .summary-card { background: #fff; border: 1.5px solid rgba(45,74,45,0.18); border-radius: 10px; padding: 1.6rem 1.8rem; margin-bottom: 2.2rem; }
+    .summary-card .sc-label { font-family: 'Arial', sans-serif; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--forest-mid); margin-bottom: 0.7rem; display: flex; align-items: center; gap: 0.4rem; }
+    .summary-card p { font-family: 'Arial', sans-serif; font-size: 0.93rem; color: var(--stone); margin-bottom: 0; line-height: 1.6; }
+
+    blockquote.pull { margin: 2rem 0; border-left: 3px solid var(--ember); padding: 0.4rem 0 0.4rem 1.5rem; font-size: 1.25rem; font-style: italic; color: var(--forest); line-height: 1.5; }
+
+    /* ── NUMBERED CARDS ── */
+    .num-card { background: #fff; border: 1px solid rgba(45,74,45,0.15); border-radius: 10px; padding: 1.5rem 1.6rem; margin-bottom: 1rem; display: flex; gap: 1.1rem; align-items: flex-start; }
+    .num-badge { flex-shrink: 0; width: 2.3rem; height: 2.3rem; border-radius: 50%; background: var(--forest); color: #fff; display: flex; align-items: center; justify-content: center; font-family: 'Arial', sans-serif; font-weight: bold; font-size: 0.95rem; }
+    .num-card.r1 .num-badge { background: rgba(45,74,45,0.35); }
+    .num-card.r2 .num-badge { background: var(--forest-mid); }
+    .num-card.r3 .num-badge { background: var(--forest); }
+    .num-body h4 { font-size: 1.02rem; color: var(--charcoal); margin-bottom: 0.4rem; }
+    .num-body p { font-size: 0.96rem; margin-bottom: 0; color: var(--stone); }
+
+    /* ── FIGURE PLACEHOLDER ── */
+    .figure-box { background: #fff; border: 1px solid rgba(45,74,45,0.15); border-radius: 10px; padding: 2.2rem 1.5rem; text-align: center; margin: 2.2rem 0; }
+    .figure-box .fig-icon { font-size: 2.4rem; margin-bottom: 0.7rem; }
+    .figure-box .fig-caption { font-family: 'Arial', sans-serif; font-size: 0.85rem; color: var(--stone); max-width: 480px; margin: 0 auto; line-height: 1.55; }
+
+    /* ── PILLAR CALLOUT ── */
+    .pillar-callout { background: var(--forest); color: #fff; border-radius: 12px; padding: 2rem; margin: 2.2rem 0 1rem; }
+    .pillar-callout .pc-icon { font-size: 1.8rem; margin-bottom: 0.7rem; }
+    .pillar-callout h3 { font-size: 1.15rem; margin-bottom: 0.7rem; color: #fff; }
+    .pillar-callout p { color: rgba(255,255,255,0.75); font-family: 'Arial', sans-serif; font-size: 0.92rem; margin-bottom: 0.7rem; }
+    .pillar-callout p:last-child { margin-bottom: 0; }
+
+    /* ── SERIES NAV ── */
+    .series-nav { max-width: 700px; margin: 1rem auto 0; padding: 1.5rem 1.5rem 0; border-top: 1px solid rgba(200,82,26,0.15); }
+    .series-nav .series-label { font-family: 'Arial', sans-serif; font-size: 0.75rem; text-transform: uppercase; letter-spacing: 0.12em; color: var(--stone); margin-bottom: 0.8rem; display: block; }
+    .series-row { display: flex; justify-content: space-between; gap: 1rem; flex-wrap: wrap; }
+    .series-item { font-family: 'Arial', sans-serif; font-size: 0.9rem; color: var(--stone); padding: 0.7rem 0; }
+    .series-item a { color: var(--ember); text-decoration: none; }
+    .series-item a:hover { text-decoration: underline; }
+    .series-item.next-disabled { opacity: 0.5; }
+
+    .join-nudge { max-width: 700px; margin: 2.5rem auto 4rem; padding: 0 1.5rem; }
+    .join-nudge-inner { background: var(--ink); border-radius: 12px; padding: 2rem; text-align: center; color: #fff; }
+    .join-nudge-inner p { font-family: 'Arial', sans-serif; font-size: 0.92rem; color: rgba(255,255,255,0.6); margin-bottom: 1.1rem; }
+    .btn-join { display: inline-block; background: var(--ember); color: #fff; padding: 0.8rem 2rem; border-radius: 7px; text-decoration: none; font-family: 'Arial', sans-serif; font-weight: bold; font-size: 0.95rem; transition: background 0.2s; }
+    .btn-join:hover { background: var(--ember-light); }
+
+    footer { background: var(--charcoal); color: rgba(255,255,255,0.55); padding: 3rem 2rem; text-align: center; }
+    footer .footer-logo { font-size: 1.3rem; color: var(--ember-light); margin-bottom: 0.5rem; display: block; }
+    footer p { font-family: 'Arial', sans-serif; font-size: 0.85rem; color: rgba(255,255,255,0.45); margin-bottom: 0.4rem; }
+    footer a { color: var(--ember-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links { display: flex; gap: 1.5rem; justify-content: center; margin-top: 1rem; flex-wrap: wrap; }
+    .footer-links a { font-family: 'Arial', sans-serif; font-size: 0.82rem; color: rgba(255,255,255,0.4); }
+
+    @media (max-width: 560px) {
+      .article-hero { padding: 3.5rem 1.2rem 2.5rem; }
+      .series-row { flex-direction: column; gap: 0.3rem; }
+      .num-card { flex-direction: column; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html">🔥 Искра жизни</a>
+  <span class="sep">/</span>
+  <a href="blog.html">Блог</a>
+  <span class="sep">/</span>
+  <span class="current">Методологическое ядро</span>
+</header>
+
+<div class="article-hero">
+  <span class="hero-eyebrow">Сеть родительских клубов</span>
+  <h1>Часть 7. <em>Методологическое ядро — реактор будущих инициатив</em></h1>
+  <div class="article-meta">
+    <span>9 мая 2025</span>
+    <span class="dot">·</span>
+    <span>19:11</span>
+  </div>
+</div>
+
+<div class="article-wrap">
+
+  <div class="summary-card">
+    <span class="sc-label">📝 Коротко о главном</span>
+    <p>
+      В рамках проекта меняется образ жизни семьи, включая уровень доверия, ответственности и
+      взаимодействия. Важна гибкость и адаптация — у каждого участника процесс развивается по-разному.
+      Сеть родительских клубов позволяет обмениваться опытом, формировать объёмную картину жизни и
+      тренировать у детей навыки ориентации и действий в разных условиях. Отмечается потенциал
+      социального ресурса для новых инициатив, бизнесов и взаимодействий.
+    </p>
+  </div>
+
+  <p class="lede">
+    В процессе реализации проекта, конечно, мы меняем образ жизни. Вспоминаем матрёшку иерархии живых
+    систем — каждый человек, ребёнок встроен в огромное количество других бо́льших надсистем: квартира,
+    дом, город, район, логистика родителей, где они работают, чтобы обеспечить все ресурсы, жильё,
+    образование. Если ипотека, кредиты, рассрочки — привязка к городам и зарплатам. Всё на всё
+    завязано. Выдёргиваешь один элемент (ребёнка) в другой сюжет — а там корневая система, цепляющая
+    все смежные элементы и сферы. Переход в другой образ жизни семьи меняет приоритеты, логистику —
+    много чего.
+  </p>
+
+  <h2 class="section-h">Радиусы доверия и ответственности</h2>
+
+  <p>
+    Но мы берём широкий диапазон родителей. Кто-то может вместо текущих лагерей потратить деньги и
+    время на наш формат. Кто-то — приезжать в летние и каникулярные лагеря, где-то захватывая учебные
+    дни. А кто-то целиком перейдёт на такое становление личности детей и развитие всей семьи. Исходим
+    из того, что диапазон большой и нет какого-то общего знаменателя. Каждый в меру созревания будет
+    переходить из радиуса в радиус, ближе к центру.
+  </p>
+
+  <div class="num-card r1">
+    <div class="num-badge">1</div>
+    <div class="num-body">
+      <h4>Внешний радиус</h4>
+      <p>Вместо текущих лагерей — участие в нашем формате. Разовое погружение, знакомство.</p>
+    </div>
+  </div>
+
+  <div class="num-card r2">
+    <div class="num-badge">2</div>
+    <div class="num-body">
+      <h4>Средний радиус</h4>
+      <p>Летние и каникулярные заезды, иногда захватывающие учебные дни. Регулярное, но не полное участие.</p>
+    </div>
+  </div>
+
+  <div class="num-card r3">
+    <div class="num-badge">3</div>
+    <div class="num-body">
+      <h4>Центр</h4>
+      <p>Полный переход на такое становление личности детей и развитие всей семьи.</p>
+    </div>
+  </div>
+
+  <p>
+    Что за радиусы? Степень доверия и ответственности друг к другу. Всё. И оно будет выражаться в
+    действиях: кто куда поехал, сколько времени провёл — с каким результатом, качеством, отношениями.
+  </p>
+
+  <h2 class="section-h">Сеть на связи: как формируется объёмная картина</h2>
+
+  <p>
+    Мы все на связи, сеть работает. После погружения у мастеров и приземления на своих локациях мы
+    обмениваемся результатами — у кого как получается. Мастера удалённо координируют и консультируют.
+    И у нас у всех формируется объёмная картинка реальности. У детей внутри будет расти собственная
+    карта жизни, включая карту школьных предметов, разделов и тем, их связей между собой и реальной
+    жизнью. Это намного сильнее и эффективнее, чем действовать поодиночке или в небольшом сообществе.
+  </p>
+
+  <div class="figure-box">
+    <div class="fig-icon">🌿</div>
+    <p class="fig-caption">
+      Тот же пермакультурный подход — учишься в одном ландшафте-климате, один результат. Приезжаешь в
+      другие условия — новые грабли и шишки. Единый справочник садовода приземляется совершенно
+      по-разному в разных локациях.
+    </p>
+  </div>
+
+  <p>
+    Так же и с детьми, и со взрослыми. Все участвовали в одном процессе у мастера, но настолько
+    по-разному проросло у каждого. И такое положение дел — норма в живых системах: семечка внутри
+    матрёшки надсистем с непрерывно меняющимися слоями.
+  </p>
+
+  <blockquote class="pull">
+    Наша среда организована с учётом этих закономерностей и даёт раскочегариться на полную катушку
+    <a class="inline-link" href="zhivaya-sistema-9.html">внутреннему механизму ориентировки и адаптации</a>.
+    Тогда не надо знать все ответы (и невозможно) — надо уметь быстро ориентироваться и эффективно
+    действовать.
+  </blockquote>
+
+  <p>
+    Тогда мы, родители, на самом деле сможем быть спокойны за судьбу детей на выходе во взрослую
+    жизнь. Ещё и надёжную социальную сеть доверия растим с такими же адекватными участниками разного
+    возраста по всей России.
+  </p>
+
+  <h2 class="section-h">Реактор будущих инициатив</h2>
+
+  <p>
+    При сетевом взаимодействии и высокой культуре научного познания в нашей сети мы сможем
+    накапливать разные компетенции, анализировать, структурировать, описывать задним числом
+    методологию, проводить разные исследования — в том числе, при желании, писать научные работы и
+    защищать диссертации по разным направлениям. При такой концентрации знаний и опыта новички смогут
+    быстрее развиваться.
+  </p>
+
+  <div class="pillar-callout">
+    <div class="pc-icon">⚡</div>
+    <h3>Социальный ресурс наравне с природным</h3>
+    <p>
+      Какие открытия могут случиться, новые бизнесы начаться, инициативы выстрелить — на стыке
+      совершенно разных компетенций, устремлений, энтузиазма людей, соединённых доверием,
+      ответственностью и общим желанием здоровой среды развития детей и взрослых.
+    </p>
+    <p>Это тоже сейчас нельзя гарантировать — только предчувствовать.</p>
+  </div>
+
+</div>
+
+<div class="series-nav">
+  <span class="series-label">Серия «Сеть родительских клубов»</span>
+  <div class="series-row">
+    <span class="series-item"><a href="zhivaya-sistema-6.html">← Часть 6. Минимум ресурса — максимум результата</a></span>
+    <span class="series-item"><a href="zhivaya-sistema-8.html">Часть 8. Организационно-правовая форма →</a></span>
+  </div>
+</div>
+
+<div class="join-nudge">
+  <div class="join-nudge-inner">
+    <p>Если этот взгляд на выращивание живой системы отзывается — присоединяйтесь к сообществу родителей, которые растят самостоятельность детей вместе.</p>
+    <a href="index.html#join" class="btn-join">Подать заявку на участие →</a>
+  </div>
+</div>
+
+<footer>
+  <span class="footer-logo">🔥 Искра жизни</span>
+  <p>Родительская инициатива семейного экспериментального творчества</p>
+  <p>По вопросам участия: <a href="mailto:info@iskrazhizni.ru">info@iskrazhizni.ru</a></p>
+  <div class="footer-links">
+    <a href="index.html#about">О проекте</a>
+    <a href="index.html#principles">Принципы</a>
+    <a href="index.html#quiz">Опросники</a>
+    <a href="index.html#join">Присоединиться</a>
+  </div>
+  <p style="margin-top:2rem; font-size:0.75rem; opacity:0.3;">© 2026 Искра жизни</p>
+</footer>
+
+</body>
+</html>
