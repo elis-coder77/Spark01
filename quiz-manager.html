@@ -1,0 +1,799 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Опросник: Вы как руководитель — Искра жизни</title>
+  <style>
+    :root {
+      --ember:      #C8521A;
+      --ember-light:#E07040;
+      --ember-pale: #FAE8DC;
+      --forest:     #2D4A2D;
+      --forest-mid: #3D6B3D;
+      --cream:      #FDF8F3;
+      --stone:      #6B6457;
+      --charcoal:   #2A2520;
+    }
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--cream);
+      color: var(--charcoal);
+      line-height: 1.7;
+    }
+
+    /* ── HEADER ── */
+    .site-header {
+      background: var(--forest);
+      padding: 1rem 2rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .site-header a {
+      color: rgba(255,255,255,0.65);
+      font-family: 'Arial', sans-serif; font-size: 0.85rem;
+      text-decoration: none;
+    }
+    .site-header a:hover { color: #fff; }
+    .site-header span { color: rgba(255,255,255,0.3); }
+    .site-header .logo { color: #fff; font-size: 1rem; }
+
+    /* ── HERO ── */
+    .quiz-hero {
+      background: linear-gradient(135deg, #1c1410 0%, #2A2520 100%);
+      padding: 4rem 2rem 3rem;
+      text-align: center;
+    }
+    .quiz-hero .tag {
+      font-family: 'Arial', sans-serif; font-size: 0.78rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--ember-light); margin-bottom: 0.8rem; display: block;
+    }
+    .quiz-hero h1 {
+      font-size: clamp(1.6rem, 4vw, 2.6rem);
+      color: #fff; line-height: 1.3; margin-bottom: 1rem;
+    }
+    .quiz-hero p {
+      color: rgba(255,255,255,0.65);
+      font-family: 'Arial', sans-serif; font-size: 0.95rem;
+      max-width: 580px; margin: 0 auto 1.5rem;
+    }
+    .progress-bar-wrap {
+      max-width: 480px; margin: 0 auto;
+      background: rgba(255,255,255,0.1);
+      border-radius: 100px; height: 6px;
+    }
+    .progress-bar {
+      height: 6px; border-radius: 100px;
+      background: var(--ember);
+      transition: width 0.5s ease;
+      width: 0%;
+    }
+    .progress-label {
+      font-family: 'Arial', sans-serif; font-size: 0.78rem;
+      color: rgba(255,255,255,0.4); margin-top: 0.5rem;
+      text-align: center;
+    }
+
+    /* ── MAIN ── */
+    .quiz-wrap {
+      max-width: 700px; margin: 0 auto;
+      padding: 3rem 1.5rem 5rem;
+    }
+
+    /* ── SCREEN ── */
+    .screen { display: none; }
+    .screen.active { display: block; }
+
+    /* ── BLOCK LABEL ── */
+    .block-label {
+      display: inline-block;
+      font-family: 'Arial', sans-serif; font-size: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      padding: 0.3rem 0.9rem; border-radius: 100px;
+      margin-bottom: 1rem;
+    }
+    .block-label.work {
+      background: rgba(45,74,45,0.12); color: var(--forest);
+    }
+    .block-label.family {
+      background: rgba(200,82,26,0.12); color: var(--ember);
+    }
+    .block-label.insight {
+      background: rgba(200,82,26,0.08); color: var(--ember);
+    }
+
+    /* ── QUESTION CARD ── */
+    .q-card {
+      background: #fff;
+      border-radius: 12px;
+      padding: 2rem;
+      box-shadow: 0 2px 16px rgba(42,37,32,0.07);
+      margin-bottom: 1.5rem;
+    }
+    .q-num {
+      font-family: 'Arial', sans-serif; font-size: 0.78rem;
+      color: var(--stone); margin-bottom: 0.5rem;
+    }
+    .q-text {
+      font-size: 1.15rem; line-height: 1.5;
+      margin-bottom: 1.4rem; color: var(--charcoal);
+    }
+    .q-hint {
+      font-family: 'Arial', sans-serif; font-size: 0.85rem;
+      color: var(--stone); margin-bottom: 1.2rem;
+      font-style: italic;
+    }
+
+    /* ── OPTIONS ── */
+    .options { display: flex; flex-direction: column; gap: 0.7rem; }
+    .option {
+      display: flex; align-items: flex-start; gap: 0.8rem;
+      padding: 0.8rem 1rem;
+      border: 1.5px solid rgba(200,82,26,0.15);
+      border-radius: 8px; cursor: pointer;
+      transition: border-color 0.18s, background 0.18s;
+      font-family: 'Arial', sans-serif; font-size: 0.92rem;
+      color: var(--charcoal);
+      background: #fff;
+    }
+    .option:hover {
+      border-color: var(--ember); background: var(--ember-pale);
+    }
+    .option.selected {
+      border-color: var(--ember);
+      background: var(--ember-pale);
+    }
+    .option input[type=radio],
+    .option input[type=checkbox] {
+      margin-top: 3px; accent-color: var(--ember);
+      flex-shrink: 0;
+    }
+
+    /* ── MULTI SELECT ── */
+    .multi-hint {
+      font-family: 'Arial', sans-serif; font-size: 0.8rem;
+      color: var(--stone); margin-bottom: 0.8rem;
+    }
+
+    /* ── DIVIDER ── */
+    .section-divider {
+      display: flex; align-items: center; gap: 1rem;
+      margin: 2.5rem 0;
+    }
+    .section-divider hr {
+      flex: 1; border: none; border-top: 1px solid rgba(200,82,26,0.15);
+    }
+    .section-divider span {
+      font-family: 'Arial', sans-serif; font-size: 0.8rem;
+      color: var(--stone); white-space: nowrap;
+    }
+
+    /* ── NAV BUTTONS ── */
+    .q-nav {
+      display: flex; justify-content: space-between;
+      align-items: center; gap: 1rem; margin-top: 1rem;
+      flex-wrap: wrap;
+    }
+    .btn {
+      font-family: 'Arial', sans-serif; font-weight: bold;
+      font-size: 0.95rem; padding: 0.7rem 1.8rem;
+      border-radius: 6px; border: none; cursor: pointer;
+      transition: background 0.18s, transform 0.15s;
+    }
+    .btn:hover { transform: translateY(-1px); }
+    .btn-next {
+      background: var(--ember); color: #fff;
+    }
+    .btn-next:hover { background: var(--ember-light); }
+    .btn-next:disabled {
+      background: #ccc; cursor: not-allowed; transform: none;
+    }
+    .btn-back {
+      background: transparent; color: var(--stone);
+      border: 1.5px solid rgba(107,100,87,0.3);
+    }
+    .btn-back:hover { border-color: var(--stone); }
+
+    /* ── INTRO SCREEN ── */
+    .intro-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .intro-title { font-size: 1.8rem; margin-bottom: 0.8rem; }
+    .intro-text {
+      font-family: 'Arial', sans-serif; color: var(--stone);
+      margin-bottom: 1.5rem; font-size: 0.95rem;
+    }
+    .intro-meta {
+      font-family: 'Arial', sans-serif; font-size: 0.82rem;
+      color: var(--stone); display: flex; gap: 1.5rem;
+      flex-wrap: wrap;
+    }
+    .intro-meta span::before { content: '✓ '; color: var(--forest); }
+
+    /* ── RESULT ── */
+    .result-screen { text-align: center; }
+    .result-icon { font-size: 3.5rem; margin-bottom: 1rem; }
+    .result-title {
+      font-size: 1.8rem; margin-bottom: 1rem; color: var(--charcoal);
+    }
+    .result-insight {
+      background: var(--forest);
+      color: #fff; border-radius: 12px;
+      padding: 2rem; margin: 2rem 0;
+      text-align: left;
+    }
+    .result-insight h3 {
+      font-size: 1.1rem; margin-bottom: 0.8rem;
+      color: rgba(255,255,255,0.6);
+      font-family: 'Arial', sans-serif; font-weight: normal;
+      text-transform: uppercase; letter-spacing: 0.08em; font-size: 0.78rem;
+    }
+    .result-insight p {
+      color: rgba(255,255,255,0.9); font-size: 1.05rem;
+      margin-bottom: 0.8rem;
+    }
+    .result-insight p:last-child { margin-bottom: 0; }
+    .mirror-compare {
+      display: grid; grid-template-columns: 1fr 1fr;
+      gap: 1rem; margin: 2rem 0; text-align: left;
+    }
+    .mirror-card {
+      border-radius: 10px; padding: 1.3rem;
+    }
+    .mirror-card.work { background: rgba(45,74,45,0.08); border: 1.5px solid rgba(45,74,45,0.2); }
+    .mirror-card.family { background: var(--ember-pale); border: 1.5px solid rgba(200,82,26,0.2); }
+    .mirror-card h4 {
+      font-family: 'Arial', sans-serif; font-size: 0.8rem;
+      text-transform: uppercase; letter-spacing: 0.1em;
+      margin-bottom: 0.6rem;
+    }
+    .mirror-card.work h4 { color: var(--forest); }
+    .mirror-card.family h4 { color: var(--ember); }
+    .mirror-card ul { list-style: none; padding: 0; }
+    .mirror-card ul li {
+      font-family: 'Arial', sans-serif; font-size: 0.88rem;
+      color: var(--stone); padding: 0.25rem 0;
+      border-bottom: 1px solid rgba(0,0,0,0.05);
+    }
+    .mirror-card ul li:last-child { border-bottom: none; }
+    .mirror-card ul li span { color: var(--charcoal); font-weight: bold; }
+
+    .result-cta-block {
+      background: var(--ember-pale);
+      border-radius: 12px; padding: 2rem;
+      margin-top: 2rem;
+    }
+    .result-cta-block p {
+      font-size: 1rem; color: var(--charcoal);
+      margin-bottom: 1.2rem;
+    }
+    .result-buttons {
+      display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center;
+    }
+    .btn-join {
+      background: var(--forest); color: #fff;
+      text-decoration: none; padding: 0.8rem 2rem;
+      border-radius: 6px; font-family: 'Arial', sans-serif;
+      font-weight: bold; font-size: 0.95rem;
+      transition: background 0.2s;
+    }
+    .btn-join:hover { background: var(--forest-mid); }
+    .btn-share {
+      background: transparent; color: var(--ember);
+      border: 1.5px solid var(--ember);
+      padding: 0.8rem 2rem; border-radius: 6px;
+      font-family: 'Arial', sans-serif; font-weight: bold;
+      font-size: 0.95rem; cursor: pointer;
+      transition: background 0.2s;
+    }
+    .btn-share:hover { background: var(--ember-pale); }
+
+    @media (max-width: 560px) {
+      .mirror-compare { grid-template-columns: 1fr; }
+      .q-nav { flex-direction: column-reverse; }
+      .btn { width: 100%; text-align: center; }
+    }
+  </style>
+</head>
+<body>
+
+<header class="site-header">
+  <a href="index.html" class="logo">🔥 Искра жизни</a>
+  <span>/</span>
+  <a href="index.html#quiz">Опросники</a>
+  <span>/</span>
+  <span style="color:rgba(255,255,255,0.55)">Вы как руководитель</span>
+</header>
+
+<div class="quiz-hero">
+  <span class="tag">Трансформационный опросник</span>
+  <h1>Вы как руководитель</h1>
+  <p>8 вопросов, которые показывают разрыв между тем, как вы развиваете людей на работе — и как подходите к развитию собственных детей</p>
+  <div class="progress-bar-wrap">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+  <div class="progress-label" id="progressLabel">Начало</div>
+</div>
+
+<div class="quiz-wrap">
+
+  <!-- ──────────────── INTRO ──────────────── -->
+  <div class="screen active" id="screen-intro">
+    <div class="q-card" style="text-align:center; padding: 2.5rem;">
+      <div class="intro-icon">💼</div>
+      <h2 class="intro-title">Прежде чем начать</h2>
+      <p class="intro-text">
+        Этот опросник состоит из двух зеркальных частей. Сначала — вопросы о вашей работе,
+        где вы эксперт. Затем — те же вопросы о ваших детях.<br/><br/>
+        Многие обнаруживают кое-что неожиданное.
+      </p>
+      <div class="intro-meta" style="justify-content:center; margin-bottom:1.5rem;">
+        <span>8 вопросов</span>
+        <span>5 минут</span>
+        <span>Нет правильных ответов</span>
+      </div>
+      <button class="btn btn-next" onclick="goTo('screen-1')">Начать →</button>
+    </div>
+  </div>
+
+  <!-- ──────────────── BLOCK 1: WORK ──────────────── -->
+
+  <!-- Q1 -->
+  <div class="screen" id="screen-1">
+    <span class="block-label work">💼 Часть 1 из 2 — Вы на работе</span>
+    <div class="q-card">
+      <div class="q-num">Вопрос 1 из 8</div>
+      <p class="q-text">Когда к вам приходит новый сотрудник, что вы определяете в первую очередь?</p>
+      <div class="options" id="opts-1">
+        <label class="option"><input type="radio" name="q1" value="a" onclick="markOption(this)"/>
+          Цели и критерии успеха на испытательный срок</label>
+        <label class="option"><input type="radio" name="q1" value="b" onclick="markOption(this)"/>
+          Его сильные стороны и зоны роста</label>
+        <label class="option"><input type="radio" name="q1" value="c" onclick="markOption(this)"/>
+          Что его мотивирует, чего он хочет сам</label>
+        <label class="option"><input type="radio" name="q1" value="d" onclick="markOption(this)"/>
+          Разбираемся по ходу дела</label>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn btn-back" onclick="goTo('screen-intro')">← Назад</button>
+      <button class="btn btn-next" id="next-1" disabled onclick="goTo('screen-2')">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- Q2 -->
+  <div class="screen" id="screen-2">
+    <span class="block-label work">💼 Часть 1 из 2 — Вы на работе</span>
+    <div class="q-card">
+      <div class="q-num">Вопрос 2 из 8</div>
+      <p class="q-text">По каким признакам вы понимаете, что сотрудник действительно вырос?</p>
+      <div class="options" id="opts-2">
+        <label class="option"><input type="radio" name="q2" value="a" onclick="markOption(this)"/>
+          Он решает задачи, которые раньше не мог — я вижу конкретный результат</label>
+        <label class="option"><input type="radio" name="q2" value="b" onclick="markOption(this)"/>
+          Он сдал аттестацию или получил обратную связь от коллег</label>
+        <label class="option"><input type="radio" name="q2" value="c" onclick="markOption(this)"/>
+          Я чувствую это интуитивно, по общению</label>
+        <label class="option"><input type="radio" name="q2" value="d" onclick="markOption(this)"/>
+          Я проверяю через 3–6 месяцев после обучения</label>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn btn-back" onclick="goTo('screen-1')">← Назад</button>
+      <button class="btn btn-next" id="next-2" disabled onclick="goTo('screen-3')">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- Q3 -->
+  <div class="screen" id="screen-3">
+    <span class="block-label work">💼 Часть 1 из 2 — Вы на работе</span>
+    <div class="q-card">
+      <div class="q-num">Вопрос 3 из 8</div>
+      <p class="q-text">Что, по вашему опыту, реально развивает человека?</p>
+      <p class="q-hint">Выберите один — самый главный, на ваш взгляд</p>
+      <div class="options" id="opts-3">
+        <label class="option"><input type="radio" name="q3" value="a" onclick="markOption(this)"/>
+          Решение настоящих сложных задач — без страховки</label>
+        <label class="option"><input type="radio" name="q3" value="b" onclick="markOption(this)"/>
+          Хороший наставник рядом, который задаёт нужные вопросы</label>
+        <label class="option"><input type="radio" name="q3" value="c" onclick="markOption(this)"/>
+          Курсы и обучение — структурированные знания</label>
+        <label class="option"><input type="radio" name="q3" value="d" onclick="markOption(this)"/>
+          Среда: команда, культура, где приходится тянуться</label>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn btn-back" onclick="goTo('screen-2')">← Назад</button>
+      <button class="btn btn-next" id="next-3" disabled onclick="goTo('screen-4')">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- Q4 -->
+  <div class="screen" id="screen-4">
+    <span class="block-label work">💼 Часть 1 из 2 — Вы на работе</span>
+    <div class="q-card">
+      <div class="q-num">Вопрос 4 из 8</div>
+      <p class="q-text">Есть ли у вас чёткие критерии, что сотрудник «дорос» до следующего уровня?</p>
+      <div class="options" id="opts-4">
+        <label class="option"><input type="radio" name="q4" value="a" onclick="markOption(this)"/>
+          Да, прописанные — с конкретными измеримыми признаками</label>
+        <label class="option"><input type="radio" name="q4" value="b" onclick="markOption(this)"/>
+          Да, у меня в голове — я чётко понимаю, но не формализовал</label>
+        <label class="option"><input type="radio" name="q4" value="c" onclick="markOption(this)"/>
+          Примерно — скорее ощущение, чем критерии</label>
+        <label class="option"><input type="radio" name="q4" value="d" onclick="markOption(this)"/>
+          Честно: нет чётких критериев</label>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn btn-back" onclick="goTo('screen-3')">← Назад</button>
+      <button class="btn btn-next" id="next-4" disabled onclick="goTo('screen-transition')">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- TRANSITION -->
+  <div class="screen" id="screen-transition">
+    <div class="q-card" style="text-align:center; padding: 2.5rem;">
+      <div style="font-size:2.5rem; margin-bottom:1rem;">🔄</div>
+      <h3 style="font-size:1.3rem; margin-bottom:0.8rem; color: var(--charcoal);">
+        Теперь — те же вопросы<br/>о вашем ребёнке
+      </h3>
+      <p style="font-family:Arial,sans-serif; color:var(--stone); font-size:0.95rem; margin-bottom:0;">
+        Вторая часть — зеркало первой.<br/>
+        Отвечайте честно. Правильных ответов нет.
+      </p>
+    </div>
+    <div class="q-nav" style="justify-content:center;">
+      <button class="btn btn-next" onclick="goTo('screen-5')">Продолжить →</button>
+    </div>
+  </div>
+
+  <!-- ──────────────── BLOCK 2: FAMILY ──────────────── -->
+
+  <!-- Q5 -->
+  <div class="screen" id="screen-5">
+    <span class="block-label family">👨‍👩‍👧 Часть 2 из 2 — Вы как родитель</span>
+    <div class="q-card">
+      <div class="q-num">Вопрос 5 из 8</div>
+      <p class="q-text">Когда ваш ребёнок начинает новый этап — школа, кружок, новая активность — что вы определяете в первую очередь?</p>
+      <div class="options" id="opts-5">
+        <label class="option"><input type="radio" name="q5" value="a" onclick="markOption(this)"/>
+          Цель этого этапа и как я пойму, что он прошёл успешно</label>
+        <label class="option"><input type="radio" name="q5" value="b" onclick="markOption(this)"/>
+          Интересы и способности ребёнка в этот момент</label>
+        <label class="option"><input type="radio" name="q5" value="c" onclick="markOption(this)"/>
+          Выбираю то, что кажется полезным и правильным</label>
+        <label class="option"><input type="radio" name="q5" value="d" onclick="markOption(this)"/>
+          Реагирую на обстоятельства — что предлагают, что рекомендуют</label>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn btn-back" onclick="goTo('screen-transition')">← Назад</button>
+      <button class="btn btn-next" id="next-5" disabled onclick="goTo('screen-6')">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- Q6 -->
+  <div class="screen" id="screen-6">
+    <span class="block-label family">👨‍👩‍👧 Часть 2 из 2 — Вы как родитель</span>
+    <div class="q-card">
+      <div class="q-num">Вопрос 6 из 8</div>
+      <p class="q-text">По каким признакам вы понимаете, что ваш ребёнок действительно стал самостоятельнее?</p>
+      <div class="options" id="opts-6">
+        <label class="option"><input type="radio" name="q6" value="a" onclick="markOption(this)"/>
+          Он справляется с конкретными задачами, которые раньше требовали моей помощи</label>
+        <label class="option"><input type="radio" name="q6" value="b" onclick="markOption(this)"/>
+          Оценки хорошие, педагоги довольны</label>
+        <label class="option"><input type="radio" name="q6" value="c" onclick="markOption(this)"/>
+          Я чувствую — что-то изменилось, хотя сложно сформулировать что именно</label>
+        <label class="option"><input type="radio" name="q6" value="d" onclick="markOption(this)"/>
+          Честно: я не думал об этом в таких категориях</label>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn btn-back" onclick="goTo('screen-5')">← Назад</button>
+      <button class="btn btn-next" id="next-6" disabled onclick="goTo('screen-7')">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- Q7 -->
+  <div class="screen" id="screen-7">
+    <span class="block-label family">👨‍👩‍👧 Часть 2 из 2 — Вы как родитель</span>
+    <div class="q-card">
+      <div class="q-num">Вопрос 7 из 8</div>
+      <p class="q-text">Кто, на ваш взгляд, несёт главную ответственность за то, каким вырастет ваш ребёнок?</p>
+      <div class="options" id="opts-7">
+        <label class="option"><input type="radio" name="q7" value="a" onclick="markOption(this)"/>
+          Я сам — это моя задача, я держу руль</label>
+        <label class="option"><input type="radio" name="q7" value="b" onclick="markOption(this)"/>
+          Мы с ребёнком вместе — он тоже участник</label>
+        <label class="option"><input type="radio" name="q7" value="c" onclick="markOption(this)"/>
+          Школа и окружение — они проводят с ним больше времени</label>
+        <label class="option"><input type="radio" name="q7" value="d" onclick="markOption(this)"/>
+          Не знаю — наверное, всё вместе как-то складывается</label>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn btn-back" onclick="goTo('screen-6')">← Назад</button>
+      <button class="btn btn-next" id="next-7" disabled onclick="goTo('screen-8')">Дальше →</button>
+    </div>
+  </div>
+
+  <!-- Q8 -->
+  <div class="screen" id="screen-8">
+    <span class="block-label family">👨‍👩‍👧 Часть 2 из 2 — Вы как родитель</span>
+    <div class="q-card">
+      <div class="q-num">Вопрос 8 из 8</div>
+      <p class="q-text">Есть ли у вас чёткие критерии, что ваш ребёнок «дорос» до следующего уровня самостоятельности?</p>
+      <div class="options" id="opts-8">
+        <label class="option"><input type="radio" name="q8" value="a" onclick="markOption(this)"/>
+          Да — конкретные: что он умеет делать сам в этом возрасте</label>
+        <label class="option"><input type="radio" name="q8" value="b" onclick="markOption(this)"/>
+          Примерно понимаю, но не формулировал чётко</label>
+        <label class="option"><input type="radio" name="q8" value="c" onclick="markOption(this)"/>
+          Скорее ориентируюсь на ощущение и сравнение с другими детьми</label>
+        <label class="option"><input type="radio" name="q8" value="d" onclick="markOption(this)"/>
+          Честно: таких критериев нет</label>
+      </div>
+    </div>
+    <div class="q-nav">
+      <button class="btn btn-back" onclick="goTo('screen-7')">← Назад</button>
+      <button class="btn btn-next" id="next-8" disabled onclick="showResult()">Посмотреть результат →</button>
+    </div>
+  </div>
+
+  <!-- ──────────────── RESULT ──────────────── -->
+  <div class="screen" id="screen-result">
+    <div class="result-screen">
+      <div class="result-icon">💡</div>
+      <h2 class="result-title" id="result-title">Вот что стало видно</h2>
+
+      <div class="result-insight" id="result-insight">
+        <!-- filled by JS -->
+      </div>
+
+      <div class="mirror-compare">
+        <div class="mirror-card work">
+          <h4>💼 На работе вы</h4>
+          <ul id="work-summary"></ul>
+        </div>
+        <div class="mirror-card family">
+          <h4>👨‍👩‍👧 С детьми вы</h4>
+          <ul id="family-summary"></ul>
+        </div>
+      </div>
+
+      <div class="result-cta-block">
+        <p>
+          <strong>Это не упрёк.</strong> Это точка входа.<br/>
+          В инициативе «Искра жизни» мы помогаем родителям перенести свою взрослую компетентность
+          туда, где она нужна больше всего — в семью.
+        </p>
+        <div class="result-buttons">
+          <a href="index.html#join" class="btn-join">Присоединиться к инициативе →</a>
+          <button class="btn-share" onclick="shareQuiz()">Поделиться с другом</button>
+        </div>
+      </div>
+
+      <div style="margin-top:2rem; text-align:center;">
+        <button class="btn btn-back" onclick="restart()" style="font-size:0.85rem;">
+          Пройти ещё раз
+        </button>
+      </div>
+    </div>
+  </div>
+
+</div><!-- /quiz-wrap -->
+
+<script>
+  const TOTAL = 8;
+  const answers = {};
+
+  // === Google Таблица: вставь сюда URL веб-приложения после деплоя ===
+  const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzzNzDzWIs8E15r0o6y1ReqhtegNX4nYSMgXwCb5pCcXF6TfcFfk7HwfovJdyQn86lB/exec';
+
+  function sendToSheet(quizName, answersObj) {
+    if (!SHEET_URL || SHEET_URL.indexOf('ВСТАВЬ_СЮДА') === 0) return;
+    fetch(SHEET_URL, {
+      method: 'POST',
+      mode: 'no-cors',
+      headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+      body: JSON.stringify({
+        sheet: quizName,
+        fields: answersObj,
+        url: window.location.href
+      })
+    }).catch(function (err) { console.error('Sheet send failed', err); });
+  }
+
+  const screenOrder = [
+    'screen-intro',
+    'screen-1','screen-2','screen-3','screen-4',
+    'screen-transition',
+    'screen-5','screen-6','screen-7','screen-8',
+    'screen-result'
+  ];
+
+  const progressMap = {
+    'screen-intro': 0,
+    'screen-1': 12, 'screen-2': 25, 'screen-3': 37, 'screen-4': 50,
+    'screen-transition': 50,
+    'screen-5': 62, 'screen-6': 75, 'screen-7': 87, 'screen-8': 100,
+    'screen-result': 100
+  };
+
+  function goTo(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    updateProgress(id);
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  function updateProgress(screenId) {
+    const pct = progressMap[screenId] || 0;
+    document.getElementById('progressBar').style.width = pct + '%';
+    if (pct === 0) {
+      document.getElementById('progressLabel').textContent = 'Начало';
+    } else if (pct === 100) {
+      document.getElementById('progressLabel').textContent = 'Завершено';
+    } else {
+      const qNum = Math.round(pct / 12.5);
+      document.getElementById('progressLabel').textContent = `Вопрос ${Math.min(qNum,8)} из 8`;
+    }
+  }
+
+  function markOption(radio) {
+    // visual
+    const group = radio.closest('.options');
+    group.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    radio.closest('.option').classList.add('selected');
+
+    // save answer
+    const qName = radio.name; // e.g. "q1"
+    answers[qName] = radio.value;
+
+    // enable next button
+    const qNum = qName.replace('q','');
+    const nextBtn = document.getElementById('next-' + qNum);
+    if (nextBtn) nextBtn.removeAttribute('disabled');
+  }
+
+  function showResult() {
+    // Compute gap score
+    // Compare work answers (q1-q4) vs family answers (q5-q8)
+    // 'a' = most structured/aware, 'd' = least
+    const workScore = scoreBlock(['q1','q2','q3','q4']);
+    const familyScore = scoreBlock(['q5','q6','q7','q8']);
+    const gap = workScore - familyScore;
+
+    // Summaries
+    const workLabels = {
+      q1: { a:'Начинаете с целей и критериев', b:'Изучаете сильные стороны', c:'Ищете мотивацию', d:'Разбираетесь по ходу' },
+      q2: { a:'Смотрите на конкретный результат', b:'Опираетесь на аттестацию', c:'Доверяете интуиции', d:'Проверяете через полгода' },
+      q3: { a:'Верите в задачи без страховки', b:'Цените наставничество', c:'Доверяете курсам', d:'Ставите на среду' },
+      q4: { a:'Есть прописанные критерии', b:'Критерии есть в голове', c:'Скорее ощущение', d:'Критериев нет' }
+    };
+    const familyLabels = {
+      q5: { a:'Определяете цель этапа', b:'Смотрите на интересы', c:'Выбираете «полезное»', d:'Реагируете на обстоятельства' },
+      q6: { a:'Видите конкретный результат', b:'Ориентируетесь на оценки', c:'Чувствуете интуитивно', d:'Не думали об этом' },
+      q7: { a:'Держите руль сами', b:'Считаете это совместным', c:'Передаёте школе', d:'Не определились' },
+      q8: { a:'Есть конкретные критерии', b:'Примерно понимаете', c:'Сравниваете с другими', d:'Критериев нет' }
+    };
+
+    const wSummary = document.getElementById('work-summary');
+    const fSummary = document.getElementById('family-summary');
+    wSummary.innerHTML = '';
+    fSummary.innerHTML = '';
+
+    ['q1','q2','q3','q4'].forEach((q,i) => {
+      const ans = answers[q] || 'a';
+      const li = document.createElement('li');
+      li.innerHTML = workLabels[q][ans] || '';
+      wSummary.appendChild(li);
+    });
+    ['q5','q6','q7','q8'].forEach((q,i) => {
+      const ans = answers[q] || 'a';
+      const li = document.createElement('li');
+      li.innerHTML = familyLabels[q][ans] || '';
+      fSummary.appendChild(li);
+    });
+
+    // Insight text
+    const insightEl = document.getElementById('result-insight');
+    const titleEl = document.getElementById('result-title');
+
+    // Check q7 answer - responsibility question
+    const q7 = answers['q7'] || 'd';
+    const q4 = answers['q4'] || 'd';
+    const q8 = answers['q8'] || 'd';
+
+    let insightHTML = '';
+
+    if (q7 === 'c' || q7 === 'd') {
+      // Передаёт ответственность школе или не знает
+      titleEl.textContent = 'Разрыв, который меняет всё';
+      insightHTML = `
+        <h3>Вот что стало видно</h3>
+        <p>На работе вы держите руль — ставите цели, отслеживаете рост, знаете, кто за что отвечает.
+        С детьми руль часто оказывается в чужих руках: школы, кружков, системы.</p>
+        <p>Но школа не знает вашего ребёнка так, как знаете его вы. Никто снаружи не видит его полностью.
+        <strong>Только вы — изнутри.</strong></p>
+        <p>Воспитание — это не делегируемая функция. Это ваша главная управленческая задача.
+        И у неё нет «другого ответственного».</p>
+      `;
+    } else if (gap >= 2) {
+      // Большой разрыв между работой и семьёй
+      titleEl.textContent = 'Вы умеете больше, чем думаете';
+      insightHTML = `
+        <h3>Вот что стало видно</h3>
+        <p>На работе у вас есть система: цели, критерии, понимание, что работает. Вы профессионал
+        в развитии людей.</p>
+        <p>С детьми эта же компетентность почему-то остаётся за дверью. Вы начинаете
+        <em>чувствовать</em> там, где на работе <em>измеряете</em>.</p>
+        <p><strong>Это не вина — это паттерн.</strong> Большинство родителей так устроены.
+        Хорошая новость: у вас уже есть всё, чтобы это изменить.</p>
+      `;
+    } else if (gap <= 0) {
+      // Честный родитель, признаёт ограничения и там, и там
+      titleEl.textContent = 'Честность — это уже половина пути';
+      insightHTML = `
+        <h3>Вот что стало видно</h3>
+        <p>Вы честно признаёте: на работе критериев тоже не всегда хватает. Это ценно —
+        большинство людей проявляют мнимую уверенность.</p>
+        <p>Но есть важная разница: сотрудник уйдёт и найдёт другую компанию.
+        <strong>У ребёнка другого родителя нет.</strong></p>
+        <p>Пока вы ждёте готовых ответов снаружи — школа, курсы, государство —
+        ребёнок уже проживает своё детство. Без вашего участия.</p>
+      `;
+    } else {
+      // Средний случай
+      titleEl.textContent = 'Кое-что стало видно';
+      insightHTML = `
+        <h3>Вот что стало видно</h3>
+        <p>На работе вы опираетесь на критерии и конкретные признаки роста.
+        С детьми — чаще на ощущение и внешние ориентиры: оценки, рекомендации педагогов.</p>
+        <p>Но педагог видит вашего ребёнка час в день. Вы — всю жизнь.
+        <strong>Главные подсказки о вашем ребёнке — только у вас.</strong></p>
+        <p>Вопрос не в том, достаточно ли вы компетентны. Вопрос — берёте ли вы руль.</p>
+      `;
+    }
+
+    insightEl.innerHTML = insightHTML;
+    sendToSheet('Вы как руководитель', answers);
+    goTo('screen-result');
+  }
+
+  function scoreBlock(questions) {
+    // a=3, b=2, c=1, d=0
+    const map = { a: 3, b: 2, c: 1, d: 0 };
+    return questions.reduce((sum, q) => sum + (map[answers[q]] || 0), 0);
+  }
+
+  function shareQuiz() {
+    const url = window.location.href;
+    if (navigator.share) {
+      navigator.share({
+        title: 'Опросник «Вы как руководитель» — Искра жизни',
+        text: 'Прошёл опросник — оказывается, я подхожу к развитию сотрудников иначе, чем к развитию своих детей. Попробуй сам.',
+        url: url
+      });
+    } else {
+      // fallback: copy to clipboard
+      navigator.clipboard.writeText(url).then(() => {
+        alert('Ссылка скопирована! Поделитесь с другом.');
+      });
+    }
+  }
+
+  function restart() {
+    Object.keys(answers).forEach(k => delete answers[k]);
+    document.querySelectorAll('.option').forEach(o => o.classList.remove('selected'));
+    document.querySelectorAll('input[type=radio]').forEach(r => r.checked = false);
+    document.querySelectorAll('.btn-next').forEach(b => {
+      if (b.id && b.id.startsWith('next-')) b.setAttribute('disabled','');
+    });
+    goTo('screen-intro');
+  }
+</script>
+</body>
+</html>

@@ -1,0 +1,692 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Искра жизни — родительская инициатива семейного экспериментального творчества</title>
+  <style>
+    :root {
+      --ember:    #C8521A;
+      --ember-light: #E07040;
+      --ember-pale: #FAE8DC;
+      --forest:   #2D4A2D;
+      --forest-mid: #3D6B3D;
+      --cream:    #FDF8F3;
+      --stone:    #6B6457;
+      --charcoal: #2A2520;
+      --gold:     #C9900C;
+    }
+
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+
+    html { scroll-behavior: smooth; }
+
+    body {
+      font-family: 'Georgia', serif;
+      background: var(--cream);
+      color: var(--charcoal);
+      line-height: 1.7;
+    }
+
+    /* ── NAV ── */
+    nav {
+      position: sticky; top: 0; z-index: 100;
+      background: rgba(253,248,243,0.95);
+      backdrop-filter: blur(6px);
+      border-bottom: 1px solid rgba(200,82,26,0.15);
+      padding: 0.9rem 2rem;
+      display: flex; align-items: center; justify-content: space-between;
+      gap: 1rem;
+    }
+    .nav-logo {
+      font-size: 1.2rem; font-weight: bold; color: var(--ember);
+      letter-spacing: 0.02em; text-decoration: none;
+    }
+    .nav-logo span { color: var(--forest); }
+    .nav-links { display: flex; gap: 1.6rem; list-style: none; }
+    .nav-links a {
+      text-decoration: none; color: var(--stone);
+      font-family: 'Arial', sans-serif;
+      font-size: 0.9rem; letter-spacing: 0.03em;
+      transition: color 0.2s;
+    }
+    .nav-links a:hover { color: var(--ember); }
+    .nav-cta {
+      background: var(--ember); color: #fff;
+      padding: 0.5rem 1.2rem; border-radius: 4px;
+      text-decoration: none; font-family: 'Arial', sans-serif;
+      font-size: 0.85rem; font-weight: bold;
+      transition: background 0.2s;
+    }
+    .nav-cta:hover { background: var(--ember-light); }
+
+    /* ── HERO ── */
+    .hero {
+      min-height: 90vh;
+      background: linear-gradient(135deg, var(--forest) 0%, #1a3020 60%, #0f1f0f 100%);
+      display: flex; flex-direction: column;
+      align-items: center; justify-content: center;
+      text-align: center; padding: 5rem 2rem;
+      position: relative; overflow: hidden;
+    }
+    .hero::before {
+      content: '';
+      position: absolute; inset: 0;
+      background: radial-gradient(ellipse at 50% 60%, rgba(200,82,26,0.25) 0%, transparent 65%);
+      pointer-events: none;
+    }
+    .hero-spark {
+      font-size: 3.5rem; margin-bottom: 0.5rem;
+      animation: flicker 3s ease-in-out infinite;
+    }
+    @keyframes flicker {
+      0%,100% { opacity: 1; transform: scale(1); }
+      50%      { opacity: 0.85; transform: scale(1.04); }
+    }
+    .hero h1 {
+      font-size: clamp(2rem, 5vw, 3.4rem);
+      color: #fff; line-height: 1.25;
+      max-width: 820px; margin-bottom: 1.4rem;
+    }
+    .hero h1 em {
+      color: var(--ember-light); font-style: normal;
+    }
+    .hero-subtitle {
+      color: rgba(255,255,255,0.75);
+      font-size: clamp(1rem, 2.5vw, 1.2rem);
+      max-width: 620px; margin-bottom: 2.4rem;
+      font-family: 'Arial', sans-serif;
+    }
+    .hero-buttons { display: flex; gap: 1rem; flex-wrap: wrap; justify-content: center; }
+    .btn-primary {
+      background: var(--ember); color: #fff;
+      padding: 0.85rem 2rem; border-radius: 5px;
+      text-decoration: none; font-family: 'Arial', sans-serif;
+      font-weight: bold; font-size: 1rem;
+      transition: background 0.2s, transform 0.2s;
+    }
+    .btn-primary:hover { background: var(--ember-light); transform: translateY(-2px); }
+    .btn-secondary {
+      background: transparent; color: rgba(255,255,255,0.85);
+      border: 1.5px solid rgba(255,255,255,0.45);
+      padding: 0.85rem 2rem; border-radius: 5px;
+      text-decoration: none; font-family: 'Arial', sans-serif;
+      font-size: 1rem; transition: border-color 0.2s, color 0.2s;
+    }
+    .btn-secondary:hover { border-color: #fff; color: #fff; }
+
+    /* ── SECTIONS ── */
+    section { padding: 5rem 2rem; }
+    .container { max-width: 860px; margin: 0 auto; }
+    .section-tag {
+      font-family: 'Arial', sans-serif; font-size: 0.78rem;
+      text-transform: uppercase; letter-spacing: 0.12em;
+      color: var(--ember); margin-bottom: 0.6rem; display: block;
+    }
+    h2 {
+      font-size: clamp(1.6rem, 3.5vw, 2.4rem);
+      line-height: 1.3; margin-bottom: 1.2rem;
+      color: var(--charcoal);
+    }
+    h2 em { color: var(--ember); font-style: normal; }
+    p { margin-bottom: 1rem; color: var(--stone); }
+    p strong { color: var(--charcoal); }
+
+    /* ── PAIN SECTION ── */
+    .pain { background: #1c1410; color: #fff; }
+    .pain .section-tag { color: #d98060; }
+    .pain h2 { color: #fff; }
+    .pain p { color: rgba(255,255,255,0.7); }
+    .pain-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 1.5rem; margin-top: 2.5rem;
+    }
+    .stat-card {
+      background: rgba(255,255,255,0.06);
+      border: 1px solid rgba(200,82,26,0.3);
+      border-radius: 8px; padding: 1.5rem;
+    }
+    .stat-card .stat-num {
+      font-size: 2.4rem; font-weight: bold;
+      color: var(--ember-light); line-height: 1;
+      margin-bottom: 0.5rem;
+    }
+    .stat-card .stat-desc {
+      font-family: 'Arial', sans-serif; font-size: 0.9rem;
+      color: rgba(255,255,255,0.65); margin: 0;
+    }
+    .pain-quote {
+      margin-top: 3rem;
+      border-left: 3px solid var(--ember);
+      padding: 1.2rem 1.6rem;
+      background: rgba(200,82,26,0.08);
+      border-radius: 0 8px 8px 0;
+    }
+    .pain-quote p {
+      font-size: 1.15rem; font-style: italic;
+      color: rgba(255,255,255,0.85); margin: 0;
+    }
+
+    /* ── MESSAGE ── */
+    .message { background: var(--ember-pale); }
+    .message-inner {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 3rem; align-items: center;
+    }
+    .message-text h2 { margin-bottom: 1rem; }
+    .message-callout {
+      background: var(--forest);
+      color: #fff; border-radius: 12px;
+      padding: 2.5rem; text-align: center;
+    }
+    .message-callout .callout-icon { font-size: 2.5rem; margin-bottom: 1rem; }
+    .message-callout p {
+      color: rgba(255,255,255,0.9);
+      font-size: 1.15rem; font-style: italic; margin: 0;
+    }
+    .message-callout .callout-author {
+      margin-top: 1rem; font-family: 'Arial', sans-serif;
+      font-size: 0.85rem; color: rgba(255,255,255,0.55);
+      font-style: normal;
+    }
+
+    /* ── ABOUT ── */
+    .about { background: var(--cream); }
+    .pillars {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+      gap: 1.2rem; margin-top: 2.5rem;
+    }
+    .pillar {
+      border: 1px solid rgba(45,74,45,0.2);
+      border-radius: 8px; padding: 1.3rem;
+      background: #fff;
+    }
+    .pillar-icon { font-size: 1.6rem; margin-bottom: 0.5rem; }
+    .pillar h4 {
+      font-size: 0.95rem; color: var(--forest-mid);
+      margin-bottom: 0.3rem;
+    }
+    .pillar p {
+      font-family: 'Arial', sans-serif; font-size: 0.82rem;
+      color: var(--stone); margin: 0;
+    }
+
+    /* ── PRINCIPLES ── */
+    .principles { background: var(--forest); color: #fff; }
+    .principles .section-tag { color: #8fc88f; }
+    .principles h2 { color: #fff; }
+    .principles p { color: rgba(255,255,255,0.75); }
+    .principles-list {
+      margin-top: 2.5rem; display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+      gap: 1.5rem;
+    }
+    .principle-item {
+      background: rgba(255,255,255,0.07);
+      border-radius: 8px; padding: 1.5rem;
+      border-top: 3px solid var(--ember);
+    }
+    .principle-item h4 {
+      color: #fff; margin-bottom: 0.5rem;
+      font-size: 1.05rem;
+    }
+    .principle-item p {
+      font-family: 'Arial', sans-serif;
+      font-size: 0.88rem; color: rgba(255,255,255,0.65);
+      margin: 0;
+    }
+
+    /* ── QUIZ ── */
+    .quiz-section { background: #fff; }
+    .quiz-intro { margin-bottom: 2.5rem; }
+    .quiz-tracks {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1.5rem;
+    }
+    .quiz-track {
+      border: 1.5px solid var(--ember-pale);
+      border-radius: 10px; padding: 2rem;
+      background: var(--cream);
+    }
+    .quiz-track h3 {
+      color: var(--ember); font-size: 1.05rem;
+      margin-bottom: 0.8rem; display: flex; align-items: center; gap: 0.5rem;
+    }
+    .quiz-track p {
+      font-family: 'Arial', sans-serif; font-size: 0.9rem;
+      margin-bottom: 1rem;
+    }
+    .quiz-questions { list-style: none; padding: 0; }
+    .quiz-questions li {
+      font-family: 'Arial', sans-serif; font-size: 0.85rem;
+      color: var(--stone); padding: 0.4rem 0;
+      border-bottom: 1px solid rgba(200,82,26,0.1);
+      padding-left: 1rem; position: relative;
+    }
+    .quiz-questions li::before {
+      content: '→'; position: absolute; left: 0;
+      color: var(--ember); font-size: 0.8rem;
+    }
+    .quiz-track .btn-quiz {
+      display: inline-block; margin-top: 1.2rem;
+      background: var(--ember); color: #fff;
+      padding: 0.6rem 1.4rem; border-radius: 4px;
+      text-decoration: none; font-family: 'Arial', sans-serif;
+      font-size: 0.85rem; font-weight: bold;
+      transition: background 0.2s;
+    }
+    .quiz-track .btn-quiz:hover { background: var(--ember-light); }
+
+    /* ── JOIN FORM ── */
+    .join { background: var(--ember-pale); }
+    .join h2 { margin-bottom: 0.5rem; }
+    .join-intro { margin-bottom: 2rem; }
+    .form-grid {
+      display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+    }
+    .form-group {
+      display: flex; flex-direction: column;
+    }
+    .form-group.full { grid-column: 1 / -1; }
+    label {
+      font-family: 'Arial', sans-serif; font-size: 0.82rem;
+      color: var(--stone); margin-bottom: 0.3rem;
+      font-weight: bold; letter-spacing: 0.03em;
+    }
+    input, select, textarea {
+      padding: 0.7rem 0.9rem;
+      border: 1.5px solid rgba(200,82,26,0.3);
+      border-radius: 5px; font-size: 0.95rem;
+      font-family: 'Arial', sans-serif;
+      background: #fff; color: var(--charcoal);
+      transition: border-color 0.2s;
+      width: 100%;
+    }
+    input:focus, select:focus, textarea:focus {
+      outline: none; border-color: var(--ember);
+    }
+    textarea { resize: vertical; min-height: 90px; }
+    .form-submit {
+      grid-column: 1 / -1; margin-top: 0.5rem;
+    }
+    .form-submit button {
+      background: var(--forest); color: #fff;
+      border: none; padding: 0.9rem 2.5rem;
+      border-radius: 5px; font-size: 1rem;
+      font-family: 'Arial', sans-serif; font-weight: bold;
+      cursor: pointer; transition: background 0.2s;
+    }
+    .form-submit button:hover { background: var(--forest-mid); }
+    .form-note {
+      grid-column: 1 / -1;
+      font-family: 'Arial', sans-serif; font-size: 0.8rem;
+      color: var(--stone); margin-top: 0.5rem;
+    }
+
+    /* ── FOOTER ── */
+    footer {
+      background: var(--charcoal); color: rgba(255,255,255,0.55);
+      padding: 3rem 2rem; text-align: center;
+    }
+    footer .footer-logo {
+      font-size: 1.3rem; color: var(--ember-light);
+      margin-bottom: 0.5rem; display: block;
+    }
+    footer p {
+      font-family: 'Arial', sans-serif; font-size: 0.85rem;
+      color: rgba(255,255,255,0.45); margin-bottom: 0.4rem;
+    }
+    footer a { color: var(--ember-light); text-decoration: none; }
+    footer a:hover { text-decoration: underline; }
+    .footer-links {
+      display: flex; gap: 1.5rem; justify-content: center;
+      margin-top: 1rem; flex-wrap: wrap;
+    }
+    .footer-links a {
+      font-family: 'Arial', sans-serif; font-size: 0.82rem;
+      color: rgba(255,255,255,0.4);
+    }
+
+    /* ── DIVIDER ── */
+    .divider {
+      text-align: center; font-size: 1.4rem;
+      color: var(--ember); padding: 0.5rem 0;
+      letter-spacing: 0.4em;
+    }
+
+    /* ── RESPONSIVE ── */
+    @media (max-width: 640px) {
+      nav { padding: 0.8rem 1rem; }
+      .nav-links { display: none; }
+      .message-inner { grid-template-columns: 1fr; }
+      .quiz-tracks { grid-template-columns: 1fr; }
+      .form-grid { grid-template-columns: 1fr; }
+      .form-group.full { grid-column: 1; }
+      .form-submit { grid-column: 1; }
+      .form-note { grid-column: 1; }
+    }
+  </style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <a href="#" class="nav-logo">Искра <span>жизни</span></a>
+  <ul class="nav-links">
+    <li><a href="#about">О проекте</a></li>
+    <li><a href="#principles">Принципы</a></li>
+    <li><a href="blog.html">Блог</a></li>
+    <li><a href="#quiz">Опросники</a></li>
+    <li><a href="#join">Присоединиться</a></li>
+  </ul>
+  <a href="#join" class="nav-cta">Подать заявку</a>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-spark">🔥</div>
+  <h1>Только у вас —<br/><em>все ответы о вашем ребёнке</em></h1>
+  <p class="hero-subtitle">
+    Родительская инициатива семейного экспериментального творчества.
+    Помогаем родителям обрести ясность и выстроить осознанную траекторию развития ребёнка.
+  </p>
+  <div class="hero-buttons">
+    <a href="#join" class="btn-primary">Присоединиться к инициативе</a>
+    <a href="#quiz" class="btn-secondary">Пройти опросник</a>
+  </div>
+</section>
+
+<!-- PAIN -->
+<section class="pain" id="why">
+  <div class="container">
+    <span class="section-tag">Почему это важно</span>
+    <h2>Родители пятилетних детей не думают о том,<br/>что ждёт через пять лет</h2>
+    <p>
+      Большинство родителей надеются, что «с моим всё будет иначе». Но статистика неумолима:
+      90% родителей подростков оказываются в ситуации, которую можно было предвидеть — и изменить —
+      значительно раньше.
+    </p>
+
+    <div class="pain-grid">
+      <div class="stat-card">
+        <div class="stat-num">90%</div>
+        <p class="stat-desc">родителей подростков сталкиваются с теми проблемами, которые можно было заметить ещё в детстве</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">→</div>
+        <p class="stat-desc">дети не работают по выбранной в 17 лет специальности: профориентация без участия родителей не работает</p>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">?</div>
+        <p class="stat-desc">хаотичные кружки, курсы и репетиторы тратят ресурсы семьи, не приближая ребёнка к самостоятельности</p>
+      </div>
+    </div>
+
+    <blockquote class="pain-quote">
+      <p>«Если не задумаешься сейчас и будешь надеяться на государство — вот тебе факты. Всё после этого.»</p>
+    </blockquote>
+  </div>
+</section>
+
+<!-- MESSAGE -->
+<section class="message" id="message">
+  <div class="container">
+    <div class="message-inner">
+      <div class="message-text">
+        <span class="section-tag">Наше послание</span>
+        <h2>Никто снаружи не знает вашего ребёнка <em>лучше вас</em></h2>
+        <p>
+          Так устроены живые системы: все ключевые ответы о ребёнке находятся внутри семьи.
+          Ни школа, ни государство, ни эксперты не могут знать лучше, что именно нужно вашему ребёнку.
+        </p>
+        <p>
+          Наша задача — не дать готовые ответы, а помочь вам их <strong>найти самостоятельно</strong>:
+          через опросники, живой опыт других родителей и среду, где ответственность за становление
+          ребёнка возвращается туда, где она и должна быть — в семью.
+        </p>
+      </div>
+      <div class="message-callout">
+        <div class="callout-icon">🌱</div>
+        <p>«Родители, только у вас — ответы на все вопросы про вашего ребёнка. Только внутри вас. Все главные подсказки. Никто снаружи лучше вас не сможет знать.»</p>
+        <p class="callout-author">— Основатель инициативы «Искра жизни»</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ABOUT -->
+<section class="about" id="about">
+  <div class="container">
+    <span class="section-tag">О проекте</span>
+    <h2>Родительская инициатива<br/><em>семейного экспериментального творчества</em></h2>
+    <p>
+      «Искра жизни» — это сообщество родителей, которые взяли ответственность за становление
+      ребёнка самостоятельной личностью в свои руки. Мы убеждены, что самостоятельность —
+      это не черта характера, а навык: его можно и нужно целенаправленно развивать.
+    </p>
+    <p>
+      <strong>Критерий результата</strong> — решение жизненных задач по возрасту. Мы опираемся
+      на возрастную психологию и помогаем родителям понять, чего ребёнок должен уметь на каждом
+      этапе, и как этого достичь.
+    </p>
+
+    <div class="pillars">
+      <div class="pillar">
+        <div class="pillar-icon">🧬</div>
+        <h4>Теория функциональных систем</h4>
+        <p>П.К. Анохин — принципы развития живых систем</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">⚖️</div>
+        <h4>Межотраслевые балансы</h4>
+        <p>В. Леонтьев — системный анализ взаимосвязей</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">🌾</div>
+        <h4>Опыт Чартаева и Белоусова</h4>
+        <p>Практика, сэкономившая десятки лет экспериментов</p>
+      </div>
+      <div class="pillar">
+        <div class="pillar-icon">📖</div>
+        <h4>Возрастная психология</h4>
+        <p>9 ступеней развития человека (Катунин)</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PRINCIPLES -->
+<section class="principles" id="principles">
+  <div class="container">
+    <span class="section-tag">Принципы</span>
+    <h2>Законы живых систем<br/>работают независимо от того, знаете вы о них или нет</h2>
+    <p>Незнание законов не освобождает от их влияния. Зная их — принимать решения проще, точнее и безопаснее.</p>
+
+    <div class="principles-list">
+      <div class="principle-item">
+        <h4>Ответы — внутри</h4>
+        <p>Всё, что нужно знать о своём ребёнке, уже есть у вас. Сторонние эксперты — инструмент, но не источник истины.</p>
+      </div>
+      <div class="principle-item">
+        <h4>Перекрёстное наставничество</h4>
+        <p>В сообществе дети учат и воспитывают друг друга. Это богаче и разнообразнее, чем любая отдельная школа.</p>
+      </div>
+      <div class="principle-item">
+        <h4>Образование через задачи</h4>
+        <p>Решение реальных жизненных задач по возрасту развивает механизмы ориентировки и адаптации — на всю жизнь.</p>
+      </div>
+      <div class="principle-item">
+        <h4>Интенсивное развитие</h4>
+        <p>Природа развивается экстенсивно. Осознанный родитель действует интенсивно — как садовник, а не как наблюдатель.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- QUIZ -->
+<section class="quiz-section" id="quiz">
+  <div class="container">
+    <span class="section-tag">Трансформационные опросники</span>
+    <h2>Начните с фундамента —<br/><em>а потом выберите свой путь</em></h2>
+    <p class="quiz-intro">
+      Три опросника: один базовый и два точки входа. Они не диагностируют — они меняют оптику.
+      Помогают увидеть в собственном опыте то, что уже работает, и перенести это на воспитание ребёнка.
+    </p>
+
+    <!-- BASE QUIZ -->
+    <div class="quiz-track" style="margin-bottom:1.5rem; border-color:var(--forest); background:rgba(45,74,45,0.04);">
+      <h3>🌱 Детство — базовый опросник</h3>
+      <p>Пять фундаментальных вопросов, без ответа на которые всё остальное — строительство без фундамента. Начните здесь.</p>
+      <ul class="quiz-questions">
+        <li>Кому принадлежит ребёнок?</li>
+        <li>До какого возраста он ребёнок?</li>
+        <li>Какова цель детства?</li>
+        <li>Кто несёт ответственность за её достижение?</li>
+        <li>Как вы поймёте, что детство прошло хорошо?</li>
+      </ul>
+      <a href="quiz-childhood.html" class="btn-quiz" style="background:var(--forest);">Начать с базового →</a>
+    </div>
+
+    <div style="text-align:center; font-family:Arial,sans-serif; font-size:0.82rem; color:var(--stone); margin:1.2rem 0 1.2rem;">
+      — или войдите через свой опыт —
+    </div>
+
+    <div class="quiz-tracks">
+      <div class="quiz-track">
+        <h3>👤 Ваш подростковый опыт</h3>
+        <p>Вспомните, как вы сами становились личностью. Что реально помогло — а что было иллюзией?</p>
+        <ul class="quiz-questions">
+          <li>Могли ли ваши родители помочь вам с профориентацией?</li>
+          <li>Кем вы стали — благодаря школе или вопреки ей?</li>
+          <li>Какие эпизоды сформировали вас как личность?</li>
+          <li>Что реально сделало вас тем, кто вы есть сейчас?</li>
+        </ul>
+        <a href="quiz-teenager.html" class="btn-quiz">Пройти опросник →</a>
+      </div>
+
+      <div class="quiz-track">
+        <h3>💼 Вы как руководитель</h3>
+        <p>Как вы развиваете своих сотрудников? Сравните с тем, как вы подходите к развитию своих детей.</p>
+        <ul class="quiz-questions">
+          <li>Как вы оцениваете эффективность обучения в команде?</li>
+          <li>Что считаете работающим методом развития людей?</li>
+          <li>Есть ли у вас чёткие критерии результата?</li>
+          <li>Применяете ли эти же критерии к детям?</li>
+        </ul>
+        <a href="quiz-manager.html" class="btn-quiz">Пройти опросник →</a>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- JOIN FORM -->
+<section class="join" id="join">
+  <div class="container">
+    <span class="section-tag">Присоединиться</span>
+    <h2>Готовы взять руль<br/><em>в свои руки?</em></h2>
+    <p class="join-intro">
+      Заполните анкету — и мы подберём подходящий формат участия: онлайн, офлайн или гибридный.
+      Это не подписка на рассылку — это заявка на присоединение к сообществу.
+    </p>
+
+    <form onsubmit="handleSubmit(event)">
+      <div class="form-grid">
+        <div class="form-group">
+          <label for="name">Имя</label>
+          <input type="text" id="name" placeholder="Ваше имя" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Email</label>
+          <input type="email" id="email" placeholder="your@email.com" required />
+        </div>
+        <div class="form-group">
+          <label for="city">Город / населённый пункт</label>
+          <input type="text" id="city" placeholder="Где вы живёте?" />
+        </div>
+        <div class="form-group">
+          <label for="children">Дети (возраст)</label>
+          <input type="text" id="children" placeholder="Например: 7 лет, 12 лет" />
+        </div>
+        <div class="form-group full">
+          <label for="format">Предпочтительный формат участия</label>
+          <select id="format">
+            <option value="">Выберите вариант</option>
+            <option value="online">Онлайн</option>
+            <option value="offline">Очно (если есть группа рядом)</option>
+            <option value="hybrid">Гибридный</option>
+            <option value="any">Любой — главное участвовать</option>
+          </select>
+        </div>
+        <div class="form-group full">
+          <label for="message">Что привело вас сюда? (необязательно)</label>
+          <textarea id="message" placeholder="Расскажите о себе или своём запросе..."></textarea>
+        </div>
+        <div class="form-submit">
+          <button type="submit">Подать заявку на участие →</button>
+        </div>
+        <p class="form-note">
+          Мы ответим на вашу почту в течение нескольких дней. Никакого спама — только осмысленная связь.
+        </p>
+      </div>
+    </form>
+
+    <div id="form-success" style="display:none; margin-top:1.5rem; padding:1.2rem 1.5rem;
+      background:#fff; border-left:4px solid var(--forest); border-radius:4px;">
+      <strong>Заявка отправлена!</strong> Спасибо — мы свяжемся с вами в ближайшее время. 🌱
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <span class="footer-logo">🔥 Искра жизни</span>
+  <p>Родительская инициатива семейного экспериментального творчества</p>
+  <p>По вопросам участия: <a href="mailto:info@iskrazhizni.ru">info@iskrazhizni.ru</a></p>
+  <div class="footer-links">
+    <a href="#about">О проекте</a>
+    <a href="#principles">Принципы</a>
+    <a href="blog.html">Блог</a>
+    <a href="#quiz">Опросники</a>
+    <a href="#join">Присоединиться</a>
+  </div>
+  <p style="margin-top:2rem; font-size:0.75rem; opacity:0.3;">© 2026 Искра жизни</p>
+</footer>
+
+<script>
+  // === Google Таблица: вставь сюда URL веб-приложения после деплоя ===
+  const SHEET_URL = 'https://script.google.com/macros/s/AKfycbzzNzDzWIs8E15r0o6y1ReqhtegNX4nYSMgXwCb5pCcXF6TfcFfk7HwfovJdyQn86lB/exec';
+
+  function handleSubmit(e) {
+    e.preventDefault();
+
+    const fields = {
+      'Имя': document.getElementById('name').value,
+      'Email': document.getElementById('email').value,
+      'Город': document.getElementById('city').value,
+      'Дети': document.getElementById('children').value,
+      'Формат': document.getElementById('format').value,
+      'Сообщение': document.getElementById('message').value
+    };
+
+    if (SHEET_URL && SHEET_URL.indexOf('ВСТАВЬ_СЮДА') !== 0) {
+      fetch(SHEET_URL, {
+        method: 'POST',
+        mode: 'no-cors',
+        headers: { 'Content-Type': 'text/plain;charset=utf-8' },
+        body: JSON.stringify({
+          sheet: 'Заявки на участие',
+          fields: fields,
+          url: window.location.href
+        })
+      }).catch(function (err) { console.error('Sheet send failed', err); });
+    }
+
+    e.target.style.display = 'none';
+    document.getElementById('form-success').style.display = 'block';
+  }
+</script>
+
+</body>
+</html>
